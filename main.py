@@ -73,7 +73,7 @@ def check_new_submissions():
             time.sleep(3)  # adjust according to requirement
     except Exception as e:
         print(f'An error occurred: {e}')
-# sample commit
+
 if __name__ == "__main__":
     check_new_submissions()
 
