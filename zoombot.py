@@ -76,6 +76,8 @@ def locate_on_screen(image_path, confidence=0.4):
         # match the resized template with the screenshot
         match = cv2.matchTemplate(gray_screenshot, resized_template, cv2.TM_CCOEFF_NORMED)
         _, max_val, _, max_loc = cv2.minMaxLoc(match)
+        print(f"Scale: {scale}, Match value: {max_val}")
+        
 
         # if this max value is greater than the best match value, update best match value and best match location
         if max_val > best_match_val:
@@ -86,7 +88,8 @@ def locate_on_screen(image_path, confidence=0.4):
     if best_match_val < confidence:
         print(f"No match for '{image_path}' found on screen. Max match value is {best_match_val}.")
         return None
-
+        
+    print(f"Image '{image_path}' found on screen with confidence {best_match_val}.")
     return best_match_loc
 
 # This function will click on the given position of an image on the screen
