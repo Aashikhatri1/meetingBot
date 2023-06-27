@@ -40,7 +40,7 @@ driver.get(meeting_link)
 time.sleep(6)  # wait for the page to load
 
 # This function will find the image on the screen and return its position
-def locate_on_screen(image_path, confidence=0.6):
+def locate_on_screen(image_path, confidence=0.4):
     if not os.path.exists(image_path):
         print(f"The image file '{image_path}' does not exist.")
         return None
