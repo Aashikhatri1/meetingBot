@@ -8,6 +8,7 @@ import pyautogui
 import time
 from time import sleep
 import sys
+import os
 
 # Fetch the meeting link from the command line arguments
 if len(sys.argv) > 1:
@@ -39,23 +40,20 @@ driver.get(meeting_link)
 time.sleep(6)  # wait for the page to load
 
 # This function will find the image on the screen and return its position
-def locate_on_screen(image_path, confidence=0.6):
+def locate_on_screen(image_path, confidence=0.8):
+    if not os.path.exists(image_path):
+        print(f"The image file '{image_path}' does not exist.")
+        return None
+
     # capture the screen
     screenshot = pyautogui.screenshot()
     screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
 
+    # save screenshot for debugging
+    cv2.imwrite('debug_screenshot.png', screenshot)
+
     # read the image file
     template = cv2.imread(image_path, 0)
-    
-    # Check if the image was correctly read
-    if template is None:
-        print(f"Could not read image from {image_path}")
-        return None
-    
-    # check if the template image is smaller than the screenshot
-    if screenshot.shape[0] < template.shape[0] or screenshot.shape[1] < template.shape[1]:
-        print(f"Template image {image_path} is larger than the screenshot")
-        return None
     
     # convert the screenshot to grayscale
     
@@ -69,6 +67,7 @@ def locate_on_screen(image_path, confidence=0.6):
 
     # if the match is not good enough return None
     if max_val < confidence:
+        print(f"No match for '{image_path}' found on screen. Max match value is {max_val}.")
         return None
 
     return max_loc
@@ -76,6 +75,10 @@ def locate_on_screen(image_path, confidence=0.6):
 # This function will click on the given position of an image on the screen
 def click_on_image(image_path, position='center'):
     loc = locate_on_screen(image_path)
+
+    if loc is None:
+        print(f"Unable to locate image '{image_path}' on screen.")
+        return False
 
     if loc is not None:
         # get the size of the image
