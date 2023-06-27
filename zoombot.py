@@ -47,6 +47,16 @@ def locate_on_screen(image_path, confidence=0.8):
     # read the image file
     template = cv2.imread(image_path, 0)
     
+    # Check if the image was correctly read
+    if template is None:
+        print(f"Could not read image from {image_path}")
+        return None
+    
+    # check if the template image is smaller than the screenshot
+    if screenshot.shape[0] < template.shape[0] or screenshot.shape[1] < template.shape[1]:
+        print(f"Template image {image_path} is larger than the screenshot")
+        return None
+    
     # convert the screenshot to grayscale
     gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
 
@@ -59,7 +69,6 @@ def locate_on_screen(image_path, confidence=0.8):
         return None
 
     return max_loc
-
 
 # This function will click on the given position of an image on the screen
 def click_on_image(image_path, position='center'):
