@@ -39,7 +39,7 @@ driver.get(meeting_link)
 time.sleep(6)  # wait for the page to load
 
 # This function will find the image on the screen and return its position
-def locate_on_screen(image_path, confidence=0.8):
+def locate_on_screen(image_path, confidence=0.6):
     # capture the screen
     screenshot = pyautogui.screenshot()
     screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
