@@ -1,1 +1,4 @@
 https://us04web.zoom.us/j/2349397688?pwd=SWRGSElROXlwc2xQdG93REFDdm1iUT09
+
+
+python zoombot.py https://us04web.zoom.us/j/2349397688?pwd=SWRGSElROXlwc2xQdG93REFDdm1iUT09
