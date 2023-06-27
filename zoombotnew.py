@@ -10,6 +10,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from screeninfo import get_monitors
 import ctypes
+meeting_link = 'https://us04web.zoom.us/j/2349397688?pwd=SWRGSElROXlwc2xQdG93REFDdm1iUT09'
 
 def change_screen_resolution(width, height):
     user32 = ctypes.windll.user32
