@@ -54,7 +54,8 @@ def locate_on_screen(image_path, confidence=0.8):
     # Check if source image dimensions are larger than template dimensions
     if (h_img < h_templ) or (w_img < w_templ):
         print('Template dimensions are larger than source image. Please resize the template or choose a smaller one.')
-        return None
+    else:
+        result = cv2.matchTemplate(img, templ, cv2.TM_CCOEFF)
 
     # convert the screenshot to grayscale
     gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
