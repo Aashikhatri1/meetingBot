@@ -149,13 +149,13 @@ def join_meeting(meeting_link):
     # Define a start time
     start_time = time.time()
 
-    # Loop until the audio button appears or 120 seconds have passed
-    while not click_on_image(r'zoombot_images\computer_audio_button.png') and time.time() - start_time < 120:
+    # Loop until the audio button appears or 20 seconds have passed
+    while not click_on_image(r'zoombot_images\computer_audio_button.png') and time.time() - start_time < 20:
         # wait for a bit before trying again
         sleep(5)
 
-    # If the computer audio button did not appear within 50 seconds, perform the alternative actions
-    if time.time() - start_time >= 120:
+    # If the computer audio button did not appear within 20 seconds, perform the alternative actions
+    if time.time() - start_time >= 20:
         click_on_image(r'zoombot_images\enter_name_button.png')
         pyautogui.write('Bot')
         click_on_image(r'zoombot_images\join_button.png')
