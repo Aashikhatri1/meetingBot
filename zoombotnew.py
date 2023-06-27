@@ -8,73 +8,26 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from screeninfo import get_monitors
+import ctypes
 
-if len(sys.argv) > 1:
-    meeting_link = sys.argv[1]
-else:
-    print("No Zoom link provided. Exiting.")
-    sys.exit(1)
-    
-chrome_options = Options()
-chrome_options.add_argument("--use-fake-ui-for-media-stream")
-chrome_options.add_argument("--disable-notifications")
-chrome_options.add_argument("--start-maximized")
+def change_screen_resolution(width, height):
+    user32 = ctypes.windll.user32
+    user32.ChangeDisplaySettingsW(None, 0)
+    DM_BITSPERPEL = 0x00040000
+    DM_PELSWIDTH = 0x00080000
+    DM_PELSHEIGHT = 0x00100000
+    DM_SIZE = 0x001C0000
 
-chrome_options.add_experimental_option('prefs', {
-  "protocol_handler": {
-    "excluded_schemes": {
-      "zoommtg": False
-    }
-  }
-})
+    mode = user32.DEVMODEW()
+    mode.dmSize = ctypes.sizeof(user32.DEVMODEW)
+    mode.dmPelsWidth = width
+    mode.dmPelsHeight = height
+    mode.dmBitsPerPel = 32
+    mode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT
 
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-
-driver.get(meeting_link)
-
-time.sleep(6) 
-
-def locate_on_screen(image_path, confidence=0.8):
-    screenshot = pyautogui.screenshot()
-    screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-
-    template = cv2.imread(image_path, 0)
-    
-    gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
-
-    match = cv2.matchTemplate(gray_screenshot, template, cv2.TM_CCOEFF_NORMED)
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
-
-    if max_val < confidence:
-        print(f"No match for '{image_path}' found on screen. Max match value is {max_val}.")
-        return None
-
-    return max_loc
-
-
-def click_on_image(image_path, position='center'):
-    loc = locate_on_screen(image_path)
-
-    if loc is not None:
-        img = cv2.imread(image_path)
-        h, w, _ = img.shape
-
-        if position == 'top-right':
-            click_position = (loc[0] + w - 11, loc[1] + 10)
-        elif position == 'bottom-center':
-            click_position = (loc[0] + w // 2, loc[1] + h-10)
-        elif position == 'right-center':
-            click_position = (loc[0] + w, loc[1] + h // 2)
-        else:
-            click_position = (loc[0] + w // 2, loc[1] + h // 2)
-
-        pyautogui.moveTo(click_position)
-        pyautogui.click()
-        return True
-    else:
-        print(f"Unable to locate image '{image_path}' on screen.")
-        return False
-
+    if user32.ChangeDisplaySettingsW(ctypes.byref(mode), 0) != 0:
+        raise Exception("Failed to change screen resolution")
 
 def join_meeting(meeting_link): 
     time.sleep(7)
@@ -110,3 +63,20 @@ except Exception as e:
     print("An error occurred while trying to join the meeting: ", e)
 finally:
     time.sleep(5)
+    
+def main():
+    original_resolution = get_monitors()[0]
+    desired_resolution = (1920, 1080)
+    try:
+        change_screen_resolution(*desired_resolution)
+        if len(sys.argv) > 1:
+            meeting_link = sys.argv[1]
+        else:
+            print("No Zoom link provided. Exiting.")
+            return
+        join_meeting(meeting_link)
+    finally:
+        change_screen_resolution(original_resolution.width, original_resolution.height)
+
+if __name__ == "__main__":
+    main()
