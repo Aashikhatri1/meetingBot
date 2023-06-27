@@ -40,7 +40,7 @@ driver.get(meeting_link)
 time.sleep(6)  # wait for the page to load
 
 # This function will find the image on the screen and return its position
-def locate_on_screen(image_path, confidence=0.8):
+def locate_on_screen(image_path, confidence=0.6):
     if not os.path.exists(image_path):
         print(f"The image file '{image_path}' does not exist.")
         return None
@@ -130,8 +130,12 @@ def join_meeting(meeting_link):
     if not click_on_image(r'zoombot_images\accept_cookies_button.png'):
         print("Couldn't find the accept_cookies_button")
         return
-    #click_on_image(r'zoombot_images\accept_cookies_button.png')
+    
+    time.sleep(1)
     click_on_image(r'zoombot_images\cookies_exit_button.png', 'top-right')
+    time.sleep(2)
+    click_on_image(r'zoombot_images\confirm_cookies_button.png')
+    time.sleep(1)
     click_on_image(r'zoombot_images\keep_button.png')
     
     time.sleep(4)
@@ -145,7 +149,7 @@ def join_meeting(meeting_link):
     # Define a start time
     start_time = time.time()
 
-    # Loop until the audio button appears or 50 seconds have passed
+    # Loop until the audio button appears or 120 seconds have passed
     while not click_on_image(r'zoombot_images\computer_audio_button.png') and time.time() - start_time < 120:
         # wait for a bit before trying again
         sleep(5)
