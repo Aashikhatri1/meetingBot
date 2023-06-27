@@ -99,10 +99,7 @@ def join_meeting(meeting_link):
     click_on_image(r'zoombot_images\cookies_exit_button.png', 'top-right')
     click_on_image(r'zoombot_images\keep_button.png')
     
-    time.sleep(2)
-    click_on_image(r'zoombot_images\exit_login_button.png', 'top-right')
-    
-    time.sleep(2)
+    time.sleep(4)
 
     click_on_image(r'zoombot_images\launch_meeting_button.png')
     
