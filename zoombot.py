@@ -45,23 +45,13 @@ def locate_on_screen(image_path, confidence=0.8):
     screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
 
     # read the image file
-    templ = cv2.imread(image_path, 0)
+    template = cv2.imread(image_path, 0)
     
-    # Get dimensions of images
-    h_img, w_img = screenshot.shape[:2]  # source image
-    h_templ, w_templ = templ.shape[:2]  # template image
-
-    # Check if source image dimensions are larger than template dimensions
-    if (h_img < h_templ) or (w_img < w_templ):
-        print('Template dimensions are larger than source image. Please resize the template or choose a smaller one.')
-    else:
-        result = cv2.matchTemplate(img, templ, cv2.TM_CCOEFF)
-
     # convert the screenshot to grayscale
     gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
 
     # match the template with the screenshot
-    match = cv2.matchTemplate(gray_screenshot, templ, cv2.TM_CCOEFF_NORMED)
+    match = cv2.matchTemplate(gray_screenshot, template, cv2.TM_CCOEFF_NORMED)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
 
     # if the match is not good enough return None
