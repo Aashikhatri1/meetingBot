@@ -95,10 +95,9 @@ def click_on_image(image_path, position='center'):
 # The main function to join a meeting
 def join_meeting(meeting_link): 
 
-    click_on_image(r'zoombot_images\allow_button.png')
-    click_on_image(r'zoombot_images\allow_button1.png')
-    click_on_image(r'zoombot_images\cookies_button.png', 'top-right')
-    click_on_image(r'zoombot_images\cross_button.png','top-right')
+    click_on_image(r'zoombot_images\accept_cookies_button.png')
+    click_on_image(r'zoombot_images\cookies_exit_button.png', 'top-right')
+    click_on_image(r'zoombot_images\keep_button.png')
     
     time.sleep(2)
     click_on_image(r'zoombot_images\exit_login_button.png', 'top-right')
@@ -114,8 +113,6 @@ def join_meeting(meeting_link):
     time.sleep(2)
 
     click_on_image(r'zoombot_images\browser_button.png')
-
-    # _____________
     
     # Define a start time
     start_time = time.time()
