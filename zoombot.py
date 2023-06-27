@@ -95,7 +95,9 @@ def click_on_image(image_path, position='center'):
 # The main function to join a meeting
 def join_meeting(meeting_link): 
     time.sleep(7)
-
+    if not click_on_image(r'zoombot_images\accept_cookies_button.png'):
+        print("Couldn't find the accept_cookies_button")
+        return
     click_on_image(r'zoombot_images\accept_cookies_button.png')
     click_on_image(r'zoombot_images\cookies_exit_button.png', 'top-right')
     click_on_image(r'zoombot_images\keep_button.png')
