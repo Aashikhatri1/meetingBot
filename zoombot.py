@@ -108,10 +108,6 @@ def join_meeting(meeting_link):
     
     time.sleep(5)
 
-    click_on_image(r'zoombot_images\cross_button.png','top-right')
-    click_on_image(r'zoombot_images\exit_login_button.png', 'top-right')
-    time.sleep(2)
-
     click_on_image(r'zoombot_images\browser_button.png')
     
     # Define a start time
