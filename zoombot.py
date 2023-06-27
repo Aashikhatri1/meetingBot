@@ -58,9 +58,12 @@ def locate_on_screen(image_path, confidence=0.6):
         return None
     
     # convert the screenshot to grayscale
+    
     gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
 
     # match the template with the screenshot
+    cv2.imwrite("gray_screenshot.jpg",gray_screenshot)
+    cv2.imwrite("template.jpg",template)
     match = cv2.matchTemplate(gray_screenshot, template, cv2.TM_CCOEFF_NORMED)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
 
