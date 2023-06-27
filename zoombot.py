@@ -40,7 +40,7 @@ driver.get(meeting_link)
 time.sleep(6)  # wait for the page to load
 
 # This function will find the image on the screen and return its position
-def locate_on_screen(image_path, confidence=0.6):
+def locate_on_screen(image_path, confidence=0.8):
     if not os.path.exists(image_path):
         print(f"The image file '{image_path}' does not exist.")
         return None
@@ -54,23 +54,40 @@ def locate_on_screen(image_path, confidence=0.6):
 
     # read the image file
     template = cv2.imread(image_path, 0)
-    
+
     # convert the screenshot to grayscale
-    
     gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
 
-    # match the template with the screenshot
-    cv2.imwrite("gray_screenshot.jpg",gray_screenshot)
-    cv2.imwrite("template.jpg",template)
-    match = cv2.matchTemplate(gray_screenshot, template, cv2.TM_CCOEFF_NORMED)
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
+    best_match_val = 0
+    best_match_loc = None
 
-    # if the match is not good enough return None
-    if max_val < confidence:
-        print(f"No match for '{image_path}' found on screen. Max match value is {max_val}.")
+    # scales for template matching
+    scales = np.linspace(0.2, 1.0, 20)[::-1]
+
+    # perform template matching at different scales
+    for scale in scales:
+        # resize the image according to the scale
+        resized_template = cv2.resize(template, None, fx=scale, fy=scale)
+
+        # if the resized image is smaller than the template, then break from the loop
+        if resized_template.shape[0] > gray_screenshot.shape[0] or resized_template.shape[1] > gray_screenshot.shape[1]:
+            break
+
+        # match the resized template with the screenshot
+        match = cv2.matchTemplate(gray_screenshot, resized_template, cv2.TM_CCOEFF_NORMED)
+        _, max_val, _, max_loc = cv2.minMaxLoc(match)
+
+        # if this max value is greater than the best match value, update best match value and best match location
+        if max_val > best_match_val:
+            best_match_val = max_val
+            best_match_loc = max_loc
+
+    # if the best match value is less than the confidence, return None
+    if best_match_val < confidence:
+        print(f"No match for '{image_path}' found on screen. Max match value is {best_match_val}.")
         return None
 
-    return max_loc
+    return best_match_loc
 
 # This function will click on the given position of an image on the screen
 def click_on_image(image_path, position='center'):
