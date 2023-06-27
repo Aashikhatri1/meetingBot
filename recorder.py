@@ -9,6 +9,8 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
 import sys
+import certifi
+ca = certifi.where()
 
 # Load environment variables from .env file
 load_dotenv()
@@ -26,7 +28,7 @@ class Recorder:
         self.recording = False
         self.link_id = link_id
         self.stream = None
-        self.client = MongoClient(DB_CONNECTION)
+        self.client = MongoClient(DB_CONNECTION,tlsCAFile=ca)
         self.db = self.client["Meeting_automation"]
         self.col_cables = self.db["serverCables"]
         self.col_links = self.db["Zoom_meeting_link"]
@@ -98,7 +100,7 @@ class Recorder:
                 await self.stop_recording()
 
 async def main():
-    link_id = sys.argv[0]  
+    link_id = sys.argv[1]  
     recorder = Recorder(link_id)  
     await recorder.start_recording()
     asyncio.create_task(recorder.check_screen())

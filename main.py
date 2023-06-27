@@ -4,13 +4,16 @@ from pymongo import MongoClient
 import time
 from dotenv import load_dotenv
 import os
+import certifi
+ca = certifi.where()
 
 # Load environment variables from .env file
 load_dotenv()
 
 def check_new_submissions():
+    DB_CONNECTION = os.environ.get('DB_URI')
     try:
-        client = MongoClient(os.environ.get('DB_URI'))
+        client = MongoClient(DB_CONNECTION,tlsCAFile=ca)
         Meeting_automation = client['Meeting_automation']
         Zoom_meeting_link = Meeting_automation['Zoom_meeting_link']
 
@@ -47,7 +50,7 @@ def check_new_submissions():
 
                                 # Run recorder.py
                                 print('Running recorder.py...')
-                                recorder_process = subprocess.run(['python', r'recorder.py'], capture_output=True,args=str(doc['_id']))  # replace with the path to your recorder file
+                                recorder_process = subprocess.run(['python', r'recorder.py '+str(doc['_id'])], capture_output=True)  # replace with the path to your recorder file
                                 
                                 if recorder_process.returncode == 0:
                                     print('recorder.py finished successfully.')
@@ -73,7 +76,7 @@ def check_new_submissions():
             time.sleep(3)  # adjust according to requirement
     except Exception as e:
         print(f'An error occurred: {e}')
-
+# sample commit
 if __name__ == "__main__":
     check_new_submissions()
 
