@@ -31,10 +31,6 @@ chrome_options.add_experimental_option('prefs', {
   }
 })
 
-
-# Add Chrome debugging option
-# chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
-
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
 # Navigate to the meeting
