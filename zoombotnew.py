@@ -68,9 +68,10 @@ for image in images:
     for scale in scales:
         resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
         screenshot = np.array(pyautogui.screenshot())
-        screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)
-        match = cv2.matchTemplate(screenshot, resized_template, cv2.TM_CCOEFF_NORMED)
+        screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
+        match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
         _, confidence, _, _ = cv2.minMaxLoc(match)
+
 
         if confidence > best_confidence:
             best_confidence = confidence
