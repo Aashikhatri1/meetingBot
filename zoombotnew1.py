@@ -39,7 +39,7 @@ driver.get(meeting_link)
 time.sleep(7)  # wait for the page to load
 
 # List of images to find on the screen
-images = ['zoombot_images\\accept_cookies_button.png', 
+images = ['zoombot_images\\accept_cookies_button.png',
           'zoombot_images\\keep_button.png',
           'zoombot_images\\launch_meeting_button.png', 'zoombot_images\\browser_button.png',
           'zoombot_images\\agree_button.png', 'zoombot_images\\enter_name_button.png',
@@ -53,11 +53,12 @@ images = ['zoombot_images\\accept_cookies_button.png',
           'zoombot_images\\line_1_button.png', 'zoombot_images\\exit_settings_button.png']
 
 # Corresponding sleep times
-sleep_times = [3, 5, 3, 5, 5, 5,]
+sleep_times = [3, 5, 3, 5, 5, 5]
 
 # Loop over each image
 for image, sleep_time in zip(images, sleep_times):
 
+    print(f"Processing image: {image}")
     # Read the template image
     template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
     template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
@@ -75,23 +76,20 @@ for image, sleep_time in zip(images, sleep_times):
         match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
         _, confidence, _, _ = cv2.minMaxLoc(match)
 
-
         if confidence > best_confidence:
             best_confidence = confidence
             best_match = match
             best_scale = scale
-            
-    # If no good match was found, print a message and continue to the next image
-    if best_confidence < 0.6:
-        print(f"{image} not found")
-        continue
-        
+
     _, _, _, best_loc = cv2.minMaxLoc(best_match)
     w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
     x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
 
-    # Click on the found image
-    pyautogui.click(x, y)
+    # If the confidence value does not reach the threshold
+    if best_confidence < 0.6:
+        print(f"{image} not found. Confidence: {best_confidence}")
+    else:
+        # Click on the found image
+        pyautogui.click(x, y)
 
-    # Sleep for the specified time
     time.sleep(sleep_time)
