@@ -135,10 +135,7 @@ def join_meeting(meeting_link):
         return
     
     time.sleep(1)
-    click_on_image(r'zoombot_images\cookies_exit_button.png', 'top-right')
-    time.sleep(2)
-    click_on_image(r'zoombot_images\confirm_cookies_button.png')
-    time.sleep(1)
+    
     click_on_image(r'zoombot_images\keep_button.png')
     
     time.sleep(4)
@@ -148,150 +145,72 @@ def join_meeting(meeting_link):
     time.sleep(5)
 
     click_on_image(r'zoombot_images\browser_button.png')
+
+    time.sleep(5)
+
+    click_on_image(r'zoombot_images\agree_button.png')
+
+    time.sleep(5)
+    click_on_image(r'zoombot_images\enter_name_button.png')
     
-    # Define a start time
+    pyautogui.write('Bot')
+    click_on_image(r'zoombot_images\join_button.png')
+    time.sleep(10)
+    click_on_image(r'zoombot_images\video_button1.png')
+    
+    time.sleep(2)
+    
+    # Click on the microphone button to turn it off
+    if not click_on_image(r'zoombot_images\mute_button1.png'):
+        print("Couldn't find the mute button 1")
+        return
+        
+    # Moving the cursor in the centre of the screen
+    screen_width, screen_height = pyautogui.size()                 # Get the screen size
+    center_x, center_y = screen_width // 2, screen_height // 2     # Calculate the center of the screen
+    pyautogui.moveTo(center_x, center_y)                           # Move the mouse to the center of the screen
+
+    # Move the cursor for n seconds
     start_time = time.time()
 
-    # Loop until the audio button appears or 20 seconds have passed
-    while not click_on_image(r'zoombot_images\computer_audio_button.png') and time.time() - start_time < 20:
-        # wait for a bit before trying again
-        sleep(5)
+    # Loop for 2 seconds
+    while time.time() - start_time < 2:
+        # Move the mouse cursor by 100 pixels in x and y direction
+        pyautogui.move(100, 100, duration=0.25)
+        time.sleep(0.25)  # pause a bit before next movement
 
-    # If the computer audio button did not appear within 20 seconds, perform the alternative actions
-    if time.time() - start_time >= 20:
-        click_on_image(r'zoombot_images\enter_name_button.png')
-        pyautogui.write('Bot')
-        click_on_image(r'zoombot_images\join_button.png')
-        time.sleep(10)
-        click_on_image(r'zoombot_images\video_button1.png')
-        
-        time.sleep(2)
-        
-        # Click on the microphone button to turn it off
-        if not click_on_image(r'zoombot_images\mute_button1.png'):
-            print("Couldn't find the mute button 1")
-            return
+        # Move the mouse cursor back to initial position
+        pyautogui.move(-100, -100, duration=0.25)
+        time.sleep(0.25)  # pause a bit before next movement
 
-        # Rest of the alternative actions...
-        # Moving the cursor in the centre of the screen
-        screen_width, screen_height = pyautogui.size()                 # Get the screen size
-        center_x, center_y = screen_width // 2, screen_height // 2     # Calculate the center of the screen
-        pyautogui.moveTo(center_x, center_y)                           # Move the mouse to the center of the screen
-
-        # Move the cursor for n seconds
-        start_time = time.time()
-
-        # Loop for 2 seconds
-        while time.time() - start_time < 2:
-            # Move the mouse cursor by 100 pixels in x and y direction
-            pyautogui.move(100, 100, duration=0.25)
-            time.sleep(0.25)  # pause a bit before next movement
-
-            # Move the mouse cursor back to initial position
-            pyautogui.move(-100, -100, duration=0.25)
-            time.sleep(0.25)  # pause a bit before next movement
-
-        # Click on the More options button
-        if not click_on_image(r'zoombot_images\more_options_button.png1', 'top-right'):
-            print("Couldn't find the more options button 1")
-            return
-        
-        time.sleep(1)
-        
-        if not click_on_image(r'zoombot_images\audio_settings_button1.png'):
-            print("Couldn't find the audio settings button 1")
-            return
-        
-        time.sleep(1)
-
-        while not click_on_image(r'zoombot_images\test_speaker_button1.png', 'right-center'):
-            # wait for a bit before trying again
-            sleep(1)
-
-        time.sleep(1)
-
-        if not click_on_image(r'zoombot_images\line_1_button1.png'):
-            print("Couldn't find the Line 1 button 1")
-            return
-        
-        time.sleep(1)
-
-        if not click_on_image(r'zoombot_images\exit_settings_button1.png','right-center'):
-            print("Couldn't find the exit settings button 1")
-            return
-
-    else:
-    # Continue with the regular actions if the computer audio button appeared within 50 seconds
-        click_on_image(r'zoombot_images\maximize_button.png')
+    # Click on the More options button
+    if not click_on_image(r'zoombot_images\more_options_button.png1', 'top-right'):
+        print("Couldn't find the more options button 1")
+        return
     
+    time.sleep(1)
+    
+    if not click_on_image(r'zoombot_images\audio_settings_button1.png'):
+        print("Couldn't find the audio settings button 1")
+        return
+    
+    time.sleep(1)
 
-        start_time = time.time()
+    while not click_on_image(r'zoombot_images\test_speaker_button1.png', 'right-center'):
+        # wait for a bit before trying again
+        sleep(1)
 
-        # Loop for 2 seconds
-        while time.time() - start_time < 2:
-            # Move the mouse cursor by 100 pixels in x and y direction
-            pyautogui.move(100, 100, duration=0.25)
-            time.sleep(0.25)  # pause a bit before next movement
+    time.sleep(1)
 
-            # Move the mouse cursor back to initial position
-            pyautogui.move(-100, -100, duration=0.25)
-            time.sleep(0.25)  # pause a bit before next movement
+    if not click_on_image(r'zoombot_images\line_1_button1.png'):
+        print("Couldn't find the Line 1 button 1")
+        return
+    
+    time.sleep(1)
 
-        click_on_image(r'zoombot_images\video_button.png')
-        
-        time.sleep(2)
-        
-        # Click on the microphone button to turn it off
-        if not click_on_image(r'zoombot_images\mute_button.png'):
-            print("Couldn't find the mute button")
-            return
-
-        # Moving the cursor in the centre of the screen
-        screen_width, screen_height = pyautogui.size()                 # Get the screen size
-        center_x, center_y = screen_width // 2, screen_height // 2     # Calculate the center of the screen
-        pyautogui.moveTo(center_x, center_y)                           # Move the mouse to the center of the screen
-
-        # Move the cursor for n seconds
-        start_time = time.time()
-
-        # Loop for 2 seconds
-        while time.time() - start_time < 2:
-            # Move the mouse cursor by 100 pixels in x and y direction
-            pyautogui.move(100, 100, duration=0.25)
-            time.sleep(0.25)  # pause a bit before next movement
-
-            # Move the mouse cursor back to initial position
-            pyautogui.move(-100, -100, duration=0.25)
-            time.sleep(0.25)  # pause a bit before next movement
-
-        # Click on the More options button
-        if not click_on_image(r'zoombot_images\more_options_button.png', 'top-right'):
-            print("Couldn't find the more options button")
-            return
-        
-        time.sleep(1)
-        
-        if not click_on_image(r'zoombot_images\audio_settings_button.png'):
-            print("Couldn't find the audio settings button")
-            return
-        
-        time.sleep(1)
-
-        while not click_on_image(r'zoombot_images\test_speaker_button.png', 'right-center'):
-            # wait for a bit before trying again
-            sleep(1)
-
-        time.sleep(1)
-
-        if not click_on_image(r'zoombot_images\line_1_button.png'):
-            print("Couldn't find the Line 1 button")
-            return
-        
-        time.sleep(1)
-
-        if not click_on_image(r'zoombot_images\exit_settings_button.png','right-center'):
-            print("Couldn't find the exit settings button")
-            return
+    if not click_on_image(r'zoombot_images\exit_settings_button1.png','right-center'):
+        print("Couldn't find the exit settings button 1")
+        return
     
 # Call the function with your meeting link
 join_meeting(meeting_link)
