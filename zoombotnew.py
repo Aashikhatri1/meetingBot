@@ -90,9 +90,13 @@ for image, sleep_time in zip(images, sleep_times):
         x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
 
         # If the image is 'more_options_button.png', adjust the click position
+        # Clicking on top right
         if image == 'zoombot_images\\more_options_button.png':
             x, y = (best_loc[0] + w - 11, best_loc[1] + 10)
+        # Clicking on right centre
         if image == 'zoombot_images\\test_speaker_button.png':
+            x, y = (best_loc[0] + w, best_loc[1] + h // 2)
+        if image == 'zoombot_images\\exit_settings_button.png':
             x, y = (best_loc[0] + w, best_loc[1] + h // 2)
 
         # If the confidence value does not reach the threshold
