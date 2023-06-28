@@ -55,7 +55,7 @@ images = ['zoombot_images\\accept_cookies_button.png',
           'zoombot_images\\exit_settings_button.png']
 
 # Corresponding sleep times
-sleep_times = [3, 5, 3, 3, 5, 3, 15,5,5,5,2,2,2,2]
+sleep_times = [3, 5, 3, 3, 5, 3, 15,5,5,5,3,3,3,3,3]
 
 # Loop over each image
 for image, sleep_time in zip(images, sleep_times):
