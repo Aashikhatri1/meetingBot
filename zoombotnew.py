@@ -78,7 +78,7 @@ images = ['zoombot_images\\accept_cookies_button.png',
           'zoombot_images\\line_1_button.png', 'zoombot_images\\exit_settings_button.png']
 
 # Sleep times for each image
-sleep_times = [2, 2, 4, 5]
+sleep_times = [3, 5, 3, 5, 5, 5]
 
 # Loop over each image
 for i, image in enumerate(images):
