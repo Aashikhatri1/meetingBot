@@ -153,7 +153,9 @@ def join_meeting(meeting_link):
     time.sleep(5)
     click_on_image(r'zoombot_images\enter_name_button.png')
     
+    time.sleep(1)
     pyautogui.write('Bot')
+    time.sleep(1)
     click_on_image(r'zoombot_images\join_button.png')
     time.sleep(10)
     click_on_image(r'zoombot_images\video_button1.png')
