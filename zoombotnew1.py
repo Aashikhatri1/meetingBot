@@ -59,7 +59,6 @@ sleep_times = [3, 5, 8, 8, 12, 12, 5,5,5,5,2,2,2]
 
 # Loop over each image
 for image, sleep_time in zip(images, sleep_times):
-    print(f"Processing image: {image}")
 
     # Start a loop that continues until the image is found if the image is 'join_audio_button.png'
     while True:
@@ -99,7 +98,6 @@ for image, sleep_time in zip(images, sleep_times):
         else:
             # Click on the found image
             pyautogui.click(x, y)
-            print(f"{image} found. Confidence: {best_confidence}")
 
             # If the image is 'enter_name_button.png', type 'Bot' after clicking
             if image == 'zoombot_images\\enter_name_button.png':
