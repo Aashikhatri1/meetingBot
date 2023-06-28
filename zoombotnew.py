@@ -94,7 +94,7 @@ for image, sleep_time in zip(images, sleep_times):
         if image == 'zoombot_images\\more_options_button.png':
             x, y = (best_loc[0] + w - 11, best_loc[1] + 10)
         if image == 'zoombot_images\\test_speaker_button.png':
-            x, y = (best_loc[0] + w, loc[1] + h // 2)
+            x, y = (best_loc[0] + w, best_loc[1] + h // 2)
 
         # If the confidence value does not reach the threshold
         if best_confidence < 0.4:
