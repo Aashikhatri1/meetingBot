@@ -86,10 +86,11 @@ for image, sleep_time in zip(images, sleep_times):
     x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
 
     # If the confidence value does not reach the threshold
-    if best_confidence < 0.6:
+    if best_confidence < 0.4:
         print(f"{image} not found. Confidence: {best_confidence}")
     else:
         # Click on the found image
         pyautogui.click(x, y)
+        print(f"{image} found. Confidence: {best_confidence}")
 
     time.sleep(sleep_time)
