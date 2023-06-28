@@ -59,46 +59,57 @@ sleep_times = [3, 5, 8, 8, 12, 5, 15,5,5,5,2,2,2]
 
 # Loop over each image
 for image, sleep_time in zip(images, sleep_times):
-
     print(f"Processing image: {image}")
-    # Read the template image
-    template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
-    template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
-    
-    # Perform template matching at multiple scales
-    scales = np.linspace(1.0, 0.2, 20)
-    best_match = None
-    best_scale = None
-    best_confidence = -np.inf
 
-    for scale in scales:
-        resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
-        screenshot = np.array(pyautogui.screenshot())
-        screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
+    # Start a loop that continues until the image is found if the image is 'join_audio_button.png'
+    while True:
+        # Read the template image
+        template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
+        template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+        
+        # Perform template matching at multiple scales
+        scales = np.linspace(1.0, 0.2, 20)
+        best_match = None
+        best_scale = None
+        best_confidence = -np.inf
 
-        match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
-        _, confidence, _, _ = cv2.minMaxLoc(match)
+        for scale in scales:
+            resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+            screenshot = np.array(pyautogui.screenshot())
+            screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
 
-        if confidence > best_confidence:
-            best_confidence = confidence
-            best_match = match
-            best_scale = scale
+            match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
+            _, confidence, _, _ = cv2.minMaxLoc(match)
 
-    _, _, _, best_loc = cv2.minMaxLoc(best_match)
-    w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
-    x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
+            if confidence > best_confidence:
+                best_confidence = confidence
+                best_match = match
+                best_scale = scale
 
-    # If the confidence value does not reach the threshold
-    if best_confidence < 0.4:
-        print(f"{image} not found. Confidence: {best_confidence}")
-    else:
-        # Click on the found image
-        pyautogui.click(x, y)
-        print(f"{image} found. Confidence: {best_confidence}")
+        _, _, _, best_loc = cv2.minMaxLoc(best_match)
+        w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
+        x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
 
-        # If the image is 'enter_name_button.png', type 'Bot' after clicking
-        if image == 'zoombot_images\\enter_name_button.png':
-            time.sleep(1)  # Wait for the text input field to activate
-            pyautogui.write('Bot')  # Write 'Bot' using PyAutoGUI
+        # If the image is 'more_options_button.png', adjust the click position
+        if image == 'zoombot_images\\more_options_button.png':
+            x, y = (best_loc[0] + w - 11, best_loc[1] + 10)
+
+        # If the confidence value does not reach the threshold
+        if best_confidence < 0.4:
+            print(f"{image} not found. Confidence: {best_confidence}")
+            if image == 'zoombot_images\\join_audio_button.png':
+                time.sleep(5)  # Wait for 5 seconds before searching again
+                continue
+        else:
+            # Click on the found image
+            pyautogui.click(x, y)
+            print(f"{image} found. Confidence: {best_confidence}")
+
+            # If the image is 'enter_name_button.png', type 'Bot' after clicking
+            if image == 'zoombot_images\\enter_name_button.png':
+                time.sleep(1)  # Wait for the text input field to activate
+                pyautogui.write('Bot')  # Write 'Bot' using PyAutoGUI
+
+        break  # Break out of the while loop if the image is found, or if it's not the 'join_audio_button.png'
 
     time.sleep(sleep_time)
