@@ -39,8 +39,8 @@ driver.get(meeting_link)
 time.sleep(7)  # wait for the page to load
 
 # List of images to find on the screen
-images = ['zoombot_images\\accept_cookies_button.png', 'zoombot_images\\cookies_exit_button.png', 
-          'zoombot_images\\confirm_cookies_button.png', 'zoombot_images\\keep_button.png',
+images = ['zoombot_images\\accept_cookies_button.png', 
+          'zoombot_images\\keep_button.png',
           'zoombot_images\\launch_meeting_button.png', 'zoombot_images\\browser_button.png',
           'zoombot_images\\computer_audio_button.png', 'zoombot_images\\enter_name_button.png',
           'zoombot_images\\join_button.png', 'zoombot_images\\video_button1.png',
@@ -53,7 +53,7 @@ images = ['zoombot_images\\accept_cookies_button.png', 'zoombot_images\\cookies_
           'zoombot_images\\line_1_button.png', 'zoombot_images\\exit_settings_button.png']
 
 # Corresponding sleep times
-sleep_times = [2, 1, 2, 2, 4, 5,]
+sleep_times = [3, 5, 3, 2, 4, 5,]
 
 # Loop over each image
 for image, sleep_time in zip(images, sleep_times):
