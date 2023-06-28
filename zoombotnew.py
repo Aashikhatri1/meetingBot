@@ -1,83 +1,87 @@
-import sys
-import cv2
-import numpy as np
-import pyautogui
-import time
-import pygetwindow as gw
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from screeninfo import get_monitors
-import ctypes
-meeting_link = 'https://us04web.zoom.us/j/2349397688?pwd=SWRGSElROXlwc2xQdG93REFDdm1iUT09'
+import cv2
+import numpy as np
+import pyautogui
+import time
+import sys
+import os
 
-def change_screen_resolution(width, height):
-    user32 = ctypes.windll.user32
-    user32.ChangeDisplaySettingsW(None, 0)
-    DM_BITSPERPEL = 0x00040000
-    DM_PELSWIDTH = 0x00080000
-    DM_PELSHEIGHT = 0x00100000
-    DM_SIZE = 0x001C0000
+# Fetch the meeting link from the command line arguments
+if len(sys.argv) > 1:
+    meeting_link = sys.argv[1]
+else:
+    print("No Zoom link provided. Exiting.")
+    sys.exit(1)
 
-    mode = user32.DEVMODEW()
-    mode.dmSize = ctypes.sizeof(user32.DEVMODEW)
-    mode.dmPelsWidth = width
-    mode.dmPelsHeight = height
-    mode.dmBitsPerPel = 32
-    mode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT
+# Open the browser
+# Set up Chrome options
+chrome_options = Options()
+chrome_options.add_argument("--use-fake-ui-for-media-stream")  # Disable popup for allowing webcam and microphone
+chrome_options.add_argument("--disable-notifications")  # Disable notifications
+chrome_options.add_argument("--start-maximized")  # Open browser in maximized mode
 
-    if user32.ChangeDisplaySettingsW(ctypes.byref(mode), 0) != 0:
-        raise Exception("Failed to change screen resolution")
+chrome_options.add_experimental_option('prefs', {
+  "protocol_handler": {
+    "excluded_schemes": {
+      "zoommtg": False
+    }
+  }
+})
 
-def join_meeting(meeting_link): 
-    time.sleep(7)
-    if not click_on_image(r'zoombot_images\accept_cookies_button.png'):
-        return
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-    click_on_image(r'zoombot_images\cookies_exit_button.png', 'top-right')
-    click_on_image(r'zoombot_images\keep_button.png')
+# Navigate to the meeting
+driver.get(meeting_link)
+
+time.sleep(6)  # wait for the page to load
+
+# List of images to find on the screen
+images = ['zoombot_images\\accept_cookies_button.png', 'zoombot_images\\cookies_exit_button.png', 
+          'zoombot_images\\confirm_cookies_button.png', 'zoombot_images\\keep_button.png',
+          'zoombot_images\\launch_meeting_button.png', 'zoombot_images\\browser_button.png',
+          'zoombot_images\\computer_audio_button.png', 'zoombot_images\\enter_name_button.png',
+          'zoombot_images\\join_button.png', 'zoombot_images\\video_button1.png',
+          'zoombot_images\\mute_button1.png', 'zoombot_images\\more_options_button.png1',
+          'zoombot_images\\audio_settings_button1.png', 'zoombot_images\\test_speaker_button1.png',
+          'zoombot_images\\line_1_button1.png', 'zoombot_images\\exit_settings_button1.png',
+          'zoombot_images\\maximize_button.png', 'zoombot_images\\video_button.png',
+          'zoombot_images\\mute_button.png', 'zoombot_images\\more_options_button.png',
+          'zoombot_images\\audio_settings_button.png', 'zoombot_images\\test_speaker_button.png',
+          'zoombot_images\\line_1_button.png', 'zoombot_images\\exit_settings_button.png']
+
+# Loop over each image
+for image in images:
+
+    # Read the template image
+    template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
+    template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
     
-    time.sleep(4)
+    # Perform template matching at multiple scales
+    scales = np.linspace(1.0, 0.2, 20)
+    best_match = None
+    best_scale = None
+    best_confidence = -np.inf
 
-    click_on_image(r'zoombot_images\launch_meeting_button.png')
-    
-    time.sleep(5)
+    for scale in scales:
+        resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+        screenshot = np.array(pyautogui.screenshot())
+        screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)
+        match = cv2.matchTemplate(screenshot, resized_template, cv2.TM_CCOEFF_NORMED)
+        _, confidence, _, _ = cv2.minMaxLoc(match)
 
-    click_on_image(r'zoombot_images\browser_button.png')
-    
-    start_time = time.time()
+        if confidence > best_confidence:
+            best_confidence = confidence
+            best_match = match
+            best_scale = scale
 
-    while not click_on_image(r'zoombot_images\computer_audio_button.png') and time.time() - start_time < 120:
-        time.sleep(5)
+    _, _, _, best_loc = cv2.minMaxLoc(best_match)
+    w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
+    x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
 
-    if time.time() - start_time >= 120:
-        print("Unable to join the meeting within time limit.")
-        return
+    # Click on the found image
+    pyautogui.click(x, y)
 
-    click_on_image(r'zoombot_images\mute_button.png')
-    print("Successfully joined the meeting.")
-    
-try:
-    join_meeting(meeting_link)
-except Exception as e:
-    print("An error occurred while trying to join the meeting: ", e)
-finally:
-    time.sleep(5)
-    
-def main():
-    original_resolution = get_monitors()[0]
-    desired_resolution = (1920, 1080)
-    try:
-        change_screen_resolution(*desired_resolution)
-        if len(sys.argv) > 1:
-            meeting_link = sys.argv[1]
-        else:
-            print("No Zoom link provided. Exiting.")
-            return
-        join_meeting(meeting_link)
-    finally:
-        change_screen_resolution(original_resolution.width, original_resolution.height)
-
-if __name__ == "__main__":
-    main()
+    time.sleep(1)
