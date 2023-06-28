@@ -44,7 +44,7 @@ images = ['zoombot_images\\accept_cookies_button.png', 'zoombot_images\\cookies_
           'zoombot_images\\launch_meeting_button.png', 'zoombot_images\\browser_button.png',
           'zoombot_images\\computer_audio_button.png', 'zoombot_images\\enter_name_button.png',
           'zoombot_images\\join_button.png', 'zoombot_images\\video_button1.png',
-          'zoombot_images\\mute_button1.png', 'zoombot_images\\more_options_button.png1',
+          'zoombot_images\\mute_button1.png', 'zoombot_images\\more_options_button.png',
           'zoombot_images\\audio_settings_button1.png', 'zoombot_images\\test_speaker_button1.png',
           'zoombot_images\\line_1_button1.png', 'zoombot_images\\exit_settings_button1.png',
           'zoombot_images\\maximize_button.png', 'zoombot_images\\video_button.png',
