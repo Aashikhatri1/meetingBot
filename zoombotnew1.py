@@ -64,8 +64,7 @@ for image, sleep_time in zip(images, sleep_times):
     template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
     
     # Perform template matching at multiple scales
-    # scales = np.linspace(1.0, 0.2, 20)
-    scales = np.linspace(1.0, 0.1, 30)
+    scales = np.linspace(1.0, 0.2, 20)
     best_match = None
     best_scale = None
     best_confidence = -np.inf
