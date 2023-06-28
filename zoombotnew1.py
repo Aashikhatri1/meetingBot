@@ -41,7 +41,7 @@ time.sleep(7)  # wait for the page to load
 # List of images to find on the screen
 images = ['zoombot_images\\accept_cookies_button.png',
           'zoombot_images\\discard_button.png',
-          'zoombot_images\\launch_meeting_button.png', 'zoombot_images\\browser_button.png',
+          'zoombot_images\\launch_meeting_button.png', 'zoombot_images\\browser_button_2.png',
           'zoombot_images\\agree_button.png', 'zoombot_images\\enter_name_button.png',
           'zoombot_images\\join_button.png', 'zoombot_images\\video_button1.png',
           'zoombot_images\\mute_button1.png', 'zoombot_images\\more_options_button.png',
