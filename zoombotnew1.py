@@ -96,4 +96,12 @@ for image, sleep_time in zip(images, sleep_times):
         pyautogui.click(x, y)
         print(f"{image} found. Confidence: {best_confidence}")
 
+        # If the image is 'enter_name_button.png', type 'Bot' after clicking
+        if image == 'zoombot_images\\enter_name_button.png':
+            time.sleep(1)  # Wait for the text input field to activate
+            pyautogui.write('Bot')  # Write 'Bot' using PyAutoGUI
+
+    time.sleep(sleep_time)
+
+
     time.sleep(sleep_time)
