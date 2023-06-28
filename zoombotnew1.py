@@ -80,7 +80,12 @@ for image, sleep_time in zip(images, sleep_times):
             best_confidence = confidence
             best_match = match
             best_scale = scale
-
+            
+    # If no good match was found, print a message and continue to the next image
+    if best_confidence < 0.6:
+        print(f"{image} not found")
+        continue
+        
     _, _, _, best_loc = cv2.minMaxLoc(best_match)
     w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
     x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
