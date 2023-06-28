@@ -74,8 +74,9 @@ for image, sleep_time in zip(images, sleep_times):
         screenshot = np.array(pyautogui.screenshot())
         screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
         if image == 'zoombot_images\\browser_button.png':
-            cv2.imwrite(screenshot_gray)
+            cv2.imwrite('screenshot_gray.png', screenshot_gray)
             return
+
         match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
         _, confidence, _, _ = cv2.minMaxLoc(match)
 
