@@ -53,7 +53,7 @@ images = ['zoombot_images\\accept_cookies_button.png',
           'zoombot_images\\line_1_button.png', 'zoombot_images\\exit_settings_button.png']
 
 # Corresponding sleep times
-sleep_times = [3, 5, 8, 8, 12, 12]
+sleep_times = [3, 5, 8, 8, 12, 12, 5,5,5,5]
 
 # Loop over each image
 for image, sleep_time in zip(images, sleep_times):
@@ -73,8 +73,6 @@ for image, sleep_time in zip(images, sleep_times):
         resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
         screenshot = np.array(pyautogui.screenshot())
         screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
-        if image == 'zoombot_images\\browser_button.png':
-            cv2.imwrite('screenshot_gray.png', screenshot_gray)
 
         match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
         _, confidence, _, _ = cv2.minMaxLoc(match)
@@ -100,8 +98,5 @@ for image, sleep_time in zip(images, sleep_times):
         if image == 'zoombot_images\\enter_name_button.png':
             time.sleep(1)  # Wait for the text input field to activate
             pyautogui.write('Bot')  # Write 'Bot' using PyAutoGUI
-
-    time.sleep(sleep_time)
-
 
     time.sleep(sleep_time)
