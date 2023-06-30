@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 import os
 import sys
 import certifi
+from bson.objectid import ObjectId
 ca = certifi.where()
 
 # Load environment variables from .env file
@@ -49,9 +50,9 @@ class Recorder:
             document['busyCables'].append(self.device_name)
             self.col_cables.update_one({"_id": document["_id"]}, {"$set": {"availableCables": document['availableCables'], "busyCables": document['busyCables']}})
             # Update Meeting_link collection
-            self.col_links.update_one({"_id": self.link_id}, {"$set": {"status": "recording"}})
-            print(f'Recording on {self.device_name}') 
-
+            self.col_links.update_one({"_id": ObjectId(self.link_id)}, {"$set": {"status": "recording"}})
+            print(f'Recording on {self.device_name}')
+            
         device_info = sd.query_devices()
         for i, device in enumerate(device_info):
             if device['name'] == self.device_name:
@@ -79,7 +80,7 @@ class Recorder:
                 self.col_cables.update_one({"_id": document["_id"]}, {"$set": {"availableCables": document['availableCables'], "busyCables": document['busyCables']}})
 
         # Update Meeting_link collection
-        self.col_links.update_one({"_id": self.link_id}, {"$set": {"status": "Recording Completed", "recordedFile": "recording.wav"}})
+        self.col_links.update_one({"_id": ObjectId(self.link_id)}, {"$set": {"status": "Recording Completed", "recordedFile": "recording.wav"}})
 
     def save_recording(self):
         sf.write('recording.wav', np.array(BUFFER), FS)
