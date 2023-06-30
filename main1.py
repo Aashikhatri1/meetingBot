@@ -40,8 +40,8 @@ def check_new_submissions():
                             print(f'Link: {link}')
 
                             # Get the first available cable
-                            first_available_cable = handler.get_first_available_cable()
-                            print(f'First available cable: {first_available_cable}')
+                            available_cable = handler.get_available_cable()
+                            print(f'First available cable: {available_cable}')
 
                             # Change the status of the document to 'processing'
                             result = Zoom_meeting_link.update_one({'_id': doc['_id']}, {"$set": {"status": "processing"}})
