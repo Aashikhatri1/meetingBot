@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 import os
 import sys
 import certifi
-from bson.objectid import ObjectId
 ca = certifi.where()
 
 # Load environment variables from .env file
@@ -33,7 +32,7 @@ class Recorder:
         self.db = self.client["Meeting_automation"]
         self.col_cables = self.db["serverCables"]
         self.col_links = self.db["Zoom_meeting_link"]
-
+        
     def callback(self, indata, frames, time, status):
         if self.recording:
             BUFFER.extend(indata[:, 0])  # Assuming mono recording
@@ -50,9 +49,9 @@ class Recorder:
             document['busyCables'].append(self.device_name)
             self.col_cables.update_one({"_id": document["_id"]}, {"$set": {"availableCables": document['availableCables'], "busyCables": document['busyCables']}})
             # Update Meeting_link collection
-            self.col_links.update_one({"_id": ObjectId(self.link_id)}, {"$set": {"status": "recording"}})
-            print(f'Recording on {self.device_name}')
-            
+            self.col_links.update_one({"_id": self.link_id}, {"$set": {"status": "recording"}})
+            print(f'Recording on {self.device_name}') 
+
         device_info = sd.query_devices()
         for i, device in enumerate(device_info):
             if device['name'] == self.device_name:
@@ -80,7 +79,7 @@ class Recorder:
                 self.col_cables.update_one({"_id": document["_id"]}, {"$set": {"availableCables": document['availableCables'], "busyCables": document['busyCables']}})
 
         # Update Meeting_link collection
-        self.col_links.update_one({"_id": ObjectId(self.link_id)}, {"$set": {"status": "Recording Completed", "recordedFile": "recording.wav"}})
+        self.col_links.update_one({"_id": self.link_id}, {"$set": {"status": "Recording Completed", "recordedFile": "recording.wav"}})
 
     def save_recording(self):
         sf.write('recording.wav', np.array(BUFFER), FS)
@@ -101,7 +100,7 @@ class Recorder:
                 await self.stop_recording()
 
 async def main():
-    link_id = sys.argv[1]  
+    link_id = int(sys.argv[1])  # Convert input argument to integer
     recorder = Recorder(link_id)  
     await recorder.start_recording()
     asyncio.create_task(recorder.check_screen())
