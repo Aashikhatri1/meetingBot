@@ -32,7 +32,7 @@ def check_new_submissions():
                         print(f'Document status: {doc["status"]}')  # Print the status regardless of its value
 
                         # check if status is 'submitted'
-                        if doc['status'] == 'processing':
+                        if doc['status'] == 'submitted':
                             print(f'New document submitted: {doc}')
                             link = doc['link']  # assuming 'link' is the field name for the meeting link
                             print(f'Link: {link}')
