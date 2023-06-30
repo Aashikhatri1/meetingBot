@@ -50,7 +50,8 @@ def check_new_submissions():
 
                                 # Run recorder.py
                                 print('Running recorder.py...')
-                                recorder_process = subprocess.run(['python', r"recorder.py '"+str(doc['_id'])+"'"], capture_output=True)  # replace with the path to your recorder file
+                                print("python recorder.py '"+str(doc['_id'])+"'")
+                                recorder_process = subprocess.run(["python recorder.py '"+str(doc['_id'])+"'"], capture_output=True)  # replace with the path to your recorder file
                                 
                                 if recorder_process.returncode == 0:
                                     print('recorder.py finished successfully.')
