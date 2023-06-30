@@ -4,7 +4,7 @@ import certifi
 ca = certifi.where()
 
 class ServerHandler:
-    DB_CONNECTION = os.environ.get('DB_URI')
+    DB_CONNECTION = 'mongodb+srv://vrchatAdmin:il4FA64i1Mbeo8Ay@cluster0.r5gre5i.mongodb.net'
     def __init__(self, connection_string):
         self.client = MongoClient(DB_CONNECTION, tlsCAFile = ca)
         self.db = self.client['Meeting_automation']
