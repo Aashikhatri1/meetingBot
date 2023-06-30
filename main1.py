@@ -4,7 +4,7 @@ import time
 from dotenv import load_dotenv
 import os
 import certifi
-#from getCables import ServerHandler  # import ServerHandler from getCables.py
+from getCables import ServerHandler  # import ServerHandler from getCables.py
 ca = certifi.where()
 
 # Load environment variables from .env file
