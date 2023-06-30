@@ -11,6 +11,20 @@ ca = certifi.where()
 # Load environment variables from .env file
 load_dotenv()
 
+if __name__ == "__main__":
+    # Replace with your MongoDB connection string
+    conn_str = "mongodb+srv://<username>:<password>@cluster0.mongodb.net/YourDatabaseName?retryWrites=true&w=majority"
+    handler = ServerHandler(conn_str)
+    
+    # Get the first available cable
+    print(handler.get_first_available_cable())
+
+    # Move a busy cable to available
+    if handler.move_cable_from_busy_to_available("Line 20 (Virtual Audio Cable)"):
+        print("Cable moved successfully!")
+    else:
+        print("Failed to move cable!")
+
 def check_new_submissions():
     DB_CONNECTION = os.environ.get('DB_URI')
     try:
