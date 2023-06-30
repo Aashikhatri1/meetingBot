@@ -62,7 +62,7 @@ def check_new_submissions():
                                 print("python recorder.py '" + str(doc["_id"]) + "'")
                                 recorder_process = subprocess.run(
                                     [
-                                        "python"
+                                        "python "
                                         + r"recorder.py '"
                                         + str(doc["_id"])
                                         + "'"
