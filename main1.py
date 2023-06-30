@@ -13,7 +13,7 @@ load_dotenv()
 
 if __name__ == "__main__":
     # Replace with your MongoDB connection string
-    conn_str = "mongodb+srv://<username>:<password>@cluster0.mongodb.net/YourDatabaseName?retryWrites=true&w=majority"
+    conn_str = "mongodb+srv://vrchatAdmin:il4FA64i1Mbeo8Ay@cluster0.r5gre5i.mongodb.net"
     handler = ServerHandler(conn_str)
     
     # Get the first available cable
