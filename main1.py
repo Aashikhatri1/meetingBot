@@ -1,3 +1,14 @@
+import subprocess
+from pymongo import MongoClient
+import time
+from dotenv import load_dotenv
+import os
+import certifi
+ca = certifi.where()
+
+# Load environment variables from .env file
+load_dotenv()
+
 def check_new_submissions():
     DB_CONNECTION = os.environ.get('DB_URI')
     try:
