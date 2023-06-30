@@ -45,12 +45,11 @@ def check_new_submissions():
                                 
                                 # Run zoombot.py with link as argument
                                 print('Running zoombot.py...')
-                                subprocess.run(['python', 'zoombot.py', link])  # replace with the path to your zoom bot file
+                                subprocess.run(['python', r'zoombot.py', link])  # replace with the path to your zoom bot file
 
                                 # Run recorder.py
                                 print('Running recorder.py...')
-                                recorder_process = subprocess.run(['python', 'recorder.py', str(doc['_id'])], capture_output=True)  # replace with the path to your recorder file
-                                
+                                recorder_process = subprocess.run(['python', 'recorder.py', str(doc['_id'])], capture_output=True)                                
                                 if recorder_process.returncode == 0:
                                     print('recorder.py finished successfully.')
 
@@ -75,6 +74,5 @@ def check_new_submissions():
             time.sleep(3)  # adjust according to requirement
     except Exception as e:
         print(f'An error occurred: {e}')
-
 if __name__ == "__main__":
     check_new_submissions()
