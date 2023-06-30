@@ -51,7 +51,7 @@ images = ['zoombot_images\\accept_cookies_button.png',
           'zoombot_images\\more_options_button.png',
           'zoombot_images\\audio_settings_button.png',
           'zoombot_images\\test_speaker_button.png',
-          'zoombot_images\\line_1_gray.png', 
+          'zoombot_images\\line_1_button_gray.png', 
           'zoombot_images\\exit_settings_button.png']
 
 # Corresponding sleep times
