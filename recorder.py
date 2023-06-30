@@ -32,7 +32,7 @@ class Recorder:
         self.db = self.client["Meeting_automation"]
         self.col_cables = self.db["serverCables"]
         self.col_links = self.db["Zoom_meeting_link"]
-        
+
     def callback(self, indata, frames, time, status):
         if self.recording:
             BUFFER.extend(indata[:, 0])  # Assuming mono recording
@@ -100,7 +100,7 @@ class Recorder:
                 await self.stop_recording()
 
 async def main():
-    link_id = int(sys.argv[1])  # Convert input argument to integer
+    link_id = sys.argv[1]  
     recorder = Recorder(link_id)  
     await recorder.start_recording()
     asyncio.create_task(recorder.check_screen())
