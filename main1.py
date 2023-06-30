@@ -20,8 +20,6 @@ def check_new_submissions():
         last_count = Zoom_meeting_link.count_documents({})
         print(f'Initial count: {last_count}')  # print initial count
 
-        handler = ServerHandler(DB_CONNECTION)  # Create an instance of ServerHandler
-
         while True:
             current_count = Zoom_meeting_link.count_documents({})
             print(f'Current count: {current_count}')  # print current count
@@ -40,7 +38,7 @@ def check_new_submissions():
                             print(f'Link: {link}')
 
                             # Get the first available cable
-                            available_cable = handler.get_available_cable()
+                            available_cable = ServerHandler.get_available_cable()
                             print(f'First available cable: {available_cable}')
 
                             # Change the status of the document to 'processing'
