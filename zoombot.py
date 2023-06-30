@@ -78,6 +78,8 @@ for image, sleep_time in zip(images, sleep_times):
             screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
 
             match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
+            if image == 'zoombot_images\\line_1_button.png':
+                cv2.imwrite('line1gray.png', screenshot_gray)
             _, confidence, _, _ = cv2.minMaxLoc(match)
 
             if confidence > best_confidence:
