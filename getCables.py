@@ -10,7 +10,7 @@ load_dotenv()
 ca = certifi.where()
 
 class ServerHandler:
-   DB_CONNECTION = os.environ.get('DB_URI')
+    DB_CONNECTION = os.environ.get('DB_URI')
     def __init__(self, connection_string):
         self.client = MongoClient(DB_CONNECTION,tlsCAFile=ca)
         self.db = self.client['Meeting_automation']
