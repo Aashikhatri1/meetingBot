@@ -2,33 +2,41 @@ from pymongo import MongoClient
 import os
 import certifi
 from dotenv import load_dotenv
+from pymongo import MongoClient
 
-# Load environment variables from .env file
 load_dotenv()
 
-DB_CONNECTION = os.environ.get('DB_URI')
+DB_CONNECTION = os.environ.get("DB_URI")
 ca = certifi.where()
 
-class ServerHandler:
-    def __init__(self, connection_string):
-        self.client = MongoClient(DB_CONNECTION,tlsCAFile=ca)
-        self.db = self.client['Meeting_automation']
-        self.collection = self.db['Zoom_meeting_link']
+# Set up MongoDB client
+client = MongoClient(DB_CONNECTION, tlsCAFile=ca)
+db = client["Meeting_automation"]  # replace with your database name
+collection = db["serverCables"]  # replace with your collection name
 
-    def get_first_available_cable(self):
-        server_data = self.collection.find_one({"_id": 1})  # assuming server id is 1
-        if server_data and "availableCables" in server_data and server_data['availableCables']:
-            return server_data['availableCables'][0]
-        else:
-            return None  # No available cable
 
-    def move_cable_from_busy_to_available(self, cable_name):
-        server_data = self.collection.find_one({"_id": 1})  # assuming server id is 1
-        if server_data and "busyCables" in server_data and cable_name in server_data['busyCables']:
-            # Remove the cable from busyCables list
-            self.collection.update_one({"_id": 1}, {"$pull": {"busyCables": cable_name}})
-            # Add the cable to availableCables list
-            self.collection.update_one({"_id": 1}, {"$push": {"availableCables": cable_name}})
-            return True
-        else:
-            return False  # Cable not found in busyCables list
+def get_available_cable():
+    """Fetches an available cable from the MongoDB collection."""
+    document = collection.find_one({"name": "Server 1"})
+    if document and document.get("availableCables"):
+        return document["availableCables"][0]  # return first available cable
+    return None
+
+
+def make_cable_available(cable_name):
+    """Moves a cable from 'busy' to 'available' in the MongoDB collection."""
+    result = collection.update_one(
+        {"name": "Server 1"},
+        {
+            "$pull": {"busyCables": cable_name},  # remove from 'busyCables'
+            "$push": {"availableCables": cable_name},  # add to 'availableCables'
+        },
+    )
+    return result.modified_count > 0  # return whether a document was modified
+
+
+# Test the functions
+print(get_available_cable())  # get an available cable
+print(
+    make_cable_available("Line 18 (Virtual Audio Cable)")
+)  # move a cable from 'busy' to 'available'
