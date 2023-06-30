@@ -1,12 +1,18 @@
 from pymongo import MongoClient
 import os
 import certifi
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+
 ca = certifi.where()
 
 class ServerHandler:
-    DB_CONNECTION = 'mongodb+srv://vrchatAdmin:il4FA64i1Mbeo8Ay@cluster0.r5gre5i.mongodb.net'
+   DB_CONNECTION = os.environ.get('DB_URI')
     def __init__(self, connection_string):
-        self.client = MongoClient(DB_CONNECTION, tlsCAFile = ca)
+        self.client = MongoClient(DB_CONNECTION,tlsCAFile=ca)
         self.db = self.client['Meeting_automation']
         self.collection = self.db['Zoom_meeting_link']
 
