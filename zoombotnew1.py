@@ -151,7 +151,7 @@ while True:
     x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
 
     # If 'line_1_button_gray.png' is not found, scroll down and continue
-    if best_confidence < 0.95:  # Adjust this threshold as needed
+    if best_confidence < 0.945:  # Adjust this threshold as needed
         print(f"'line_1_button_gray.png' not found. Confidence: {best_confidence}")
         pyautogui.moveTo(dropdown_menu_center)  # Move to the dropdown menu
         pyautogui.scroll(-3)  # Adjust this value as needed
