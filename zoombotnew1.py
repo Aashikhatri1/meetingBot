@@ -53,7 +53,7 @@ images = ['zoombot_images\\accept_cookies_button.png',
           'zoombot_images\\test_speaker_button.png']
 
 # Corresponding sleep times
-sleep_times = [3, 5, 3, 3, 5, 3, 15,5,5,5,3,3,3,3,3]
+sleep_times = [3, 5, 3, 3, 5, 3, 30,5,5,5,3,3,3,3,3]
 
 # Loop over each image
 # Loop over each image
@@ -150,7 +150,7 @@ while True:
     if best_confidence < 0.945:  # Adjust this threshold as needed
         print(f"'line_1_button_gray.png' not found. Confidence: {best_confidence}")
         pyautogui.moveTo(dropdown_menu_center)  # Move to the dropdown menu
-        pyautogui.scroll(-15)  # Adjust this value as needed
+        pyautogui.scroll(-20)  # Adjust this value as needed
         time.sleep(1)  # Wait for a moment before the next check
         continue
     else:
