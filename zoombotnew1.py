@@ -98,16 +98,16 @@ for image, sleep_time in zip(images, sleep_times):
         if image == 'zoombot_images\\test_speaker_button.png':
             x, y = (best_loc[0] + w, best_loc[1] + h // 2)
 
-        # If the confidence value does not reach the threshold
-        if (best_confidence < 0.4 and image != 'zoombot_images\\line_1_button_gray.png') or \
-           (image == 'zoombot_images\\line_1_button_gray.png' and best_confidence < 0.94):
-            print(f"{image} not found. Confidence: {best_confidence}")
-            if image == 'zoombot_images\\join_audio_button.png':
-                time.sleep(5)  # Wait for 5 seconds before searching again
-                continue
-        else:
-            # Click on the found image
-            pyautogui.click(x, y)
+        # # If the confidence value does not reach the threshold
+        # if (best_confidence < 0.4 and image != 'zoombot_images\\line_1_button_gray.png') or \
+        #    (image == 'zoombot_images\\line_1_button_gray.png' and best_confidence < 0.94):
+        #     print(f"{image} not found. Confidence: {best_confidence}")
+        #     if image == 'zoombot_images\\join_audio_button.png':
+        #         time.sleep(5)  # Wait for 5 seconds before searching again
+        #         continue
+        # else:
+        #     # Click on the found image
+        #     pyautogui.click(x, y)
 
             # If the image is 'enter_name_button.png', type 'Bot' after clicking
             if image == 'zoombot_images\\enter_name_button.png':
@@ -154,7 +154,7 @@ while True:
     if best_confidence < 0.945:  # Adjust this threshold as needed
         print(f"'line_1_button_gray.png' not found. Confidence: {best_confidence}")
         pyautogui.moveTo(dropdown_menu_center)  # Move to the dropdown menu
-        pyautogui.scroll(-3)  # Adjust this value as needed
+        pyautogui.scroll(-10)  # Adjust this value as needed
         time.sleep(1)  # Wait for a moment before the next check
         continue
     else:
