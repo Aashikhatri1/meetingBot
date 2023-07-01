@@ -50,10 +50,12 @@ images = ['zoombot_images\\accept_cookies_button.png',
           'zoombot_images\\mute_button.png', 
           'zoombot_images\\more_options_button.png',
           'zoombot_images\\audio_settings_button.png',
-          'zoombot_images\\test_speaker_button.png']
+          'zoombot_images\\test_speaker_button.png',
+          'zoombot_images\\line_1_button_gray.png', 
+          'zoombot_images\\exit_settings_button.png']
 
 # Corresponding sleep times
-sleep_times = [3, 5, 3, 3, 5, 3, 15,5,5,5,3,3]
+sleep_times = [3, 5, 3, 3, 5, 3, 15,5,5,5,3,3,3,3,3]
 
 # Loop over each image
 for image, sleep_time in zip(images, sleep_times):
@@ -99,25 +101,6 @@ for image, sleep_time in zip(images, sleep_times):
         if image == 'zoombot_images\\exit_settings_button.png':
             x, y = (best_loc[0] + w, best_loc[1] + h // 2)
 
-        while True:
-            # Your image matching code for 'line_1_button_gray.png'...
-            template = cv2.imread('zoombot_images\\line_1_button_gray.png', cv2.IMREAD_UNCHANGED)
-            template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
-        
-            # Perform template matching at multiple scales...
-            # If 'line_1_button_gray.png' is not found, scroll down and continue
-            if best_confidence < 0.95:  # Adjust this threshold as needed
-                print(f"'line_1_button_gray.png' not found. Confidence: {best_confidence}")
-                pyautogui.scroll(-1)  # Adjust this value as needed
-                time.sleep(1)  # Wait for a moment before the next check
-                continue
-            else:
-                # If found, click on it and break the loop
-                pyautogui.click(x, y)
-                break
-
-        # Then continue your code...
-        image = 'zoombot_images\\exit_settings_button.png'
         # If the confidence value does not reach the threshold
         if (best_confidence < 0.4 and image != 'zoombot_images\\line_1_button_gray.png') or \
            (image == 'zoombot_images\\line_1_button_gray.png' and best_confidence < 0.95):
@@ -137,3 +120,20 @@ for image, sleep_time in zip(images, sleep_times):
         break  # Break out of the while loop if the image is found, or if it's not the 'join_audio_button.png'
 
     time.sleep(sleep_time)
+    
+while True:
+    # Your image matching code for 'line_1_button_gray.png'...
+
+    # If 'line_1_button_gray.png' is not found, scroll down and continue
+    if best_confidence < 0.95:  # Adjust this threshold as needed
+        print(f"'line_1_button_gray.png' not found. Confidence: {best_confidence}")
+        pyautogui.scroll(-1)  # Adjust this value as needed
+        time.sleep(1)  # Wait for a moment before the next check
+        continue
+    else:
+        # If found, click on it and break the loop
+        pyautogui.click(x, y)
+        break
+
+# Continue with the rest of the images
+image = 'zoombot_images\\exit_settings_button.png'
