@@ -50,13 +50,12 @@ images = ['zoombot_images\\accept_cookies_button.png',
           'zoombot_images\\mute_button.png', 
           'zoombot_images\\more_options_button.png',
           'zoombot_images\\audio_settings_button.png',
-          'zoombot_images\\test_speaker_button.png',
-          'zoombot_images\\line_1_button_gray.png', 
-          'zoombot_images\\exit_settings_button.png']
+          'zoombot_images\\test_speaker_button.png']
 
 # Corresponding sleep times
-sleep_times = [3, 5, 3, 3, 5, 3, 15,5,5,5,3,3,3,3,3]
+sleep_times = [3, 5, 3, 3, 5, 3, 15,5,5,5,3,3,3,]
 
+# Loop over each image
 # Loop over each image
 for image, sleep_time in zip(images, sleep_times):
 
@@ -65,7 +64,7 @@ for image, sleep_time in zip(images, sleep_times):
         # Read the template image
         template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
         template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
-        
+
         # Perform template matching at multiple scales
         scales = np.linspace(1.0, 0.2, 20)
         best_match = None
@@ -78,8 +77,6 @@ for image, sleep_time in zip(images, sleep_times):
             screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
 
             match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
-            if image == 'zoombot_images\\line_1_button_gray.png':
-                cv2.imwrite('graySS.png', screenshot_gray)
             _, confidence, _, _ = cv2.minMaxLoc(match)
 
             if confidence > best_confidence:
@@ -92,13 +89,9 @@ for image, sleep_time in zip(images, sleep_times):
         x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
 
         # If the image is 'more_options_button.png', adjust the click position
-        # Clicking on top right
         if image == 'zoombot_images\\more_options_button.png':
             x, y = (best_loc[0] + w - 11, best_loc[1] + 10)
-        # Clicking on right centre
         if image == 'zoombot_images\\test_speaker_button.png':
-            x, y = (best_loc[0] + w, best_loc[1] + h // 2)
-        if image == 'zoombot_images\\exit_settings_button.png':
             x, y = (best_loc[0] + w, best_loc[1] + h // 2)
 
         # If the confidence value does not reach the threshold
@@ -111,7 +104,7 @@ for image, sleep_time in zip(images, sleep_times):
         else:
             # Click on the found image
             pyautogui.click(x, y)
-            
+
             # If the image is 'enter_name_button.png', type 'Bot' after clicking
             if image == 'zoombot_images\\enter_name_button.png':
                 time.sleep(1)  # Wait for the text input field to activate
@@ -120,14 +113,40 @@ for image, sleep_time in zip(images, sleep_times):
         break  # Break out of the while loop if the image is found, or if it's not the 'join_audio_button.png'
 
     time.sleep(sleep_time)
-    
+
+# Start a loop that continues until 'line_1_button_gray.png' is found
 while True:
-    # Your image matching code for 'line_1_button_gray.png'...
+    # Read the template image
+    template = cv2.imread('zoombot_images\\line_1_button_gray.png', cv2.IMREAD_UNCHANGED)
+    template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+
+    # Perform template matching at multiple scales
+    scales = np.linspace(1.0, 0.2, 20)
+    best_match = None
+    best_scale = None
+    best_confidence = -np.inf
+
+    for scale in scales:
+        resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+        screenshot = np.array(pyautogui.screenshot())
+        screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
+
+        match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
+        _, confidence, _, _ = cv2.minMaxLoc(match)
+
+        if confidence > best_confidence:
+            best_confidence = confidence
+            best_match = match
+            best_scale = scale
+
+    _, _, _, best_loc = cv2.minMaxLoc(best_match)
+    w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
+    x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
 
     # If 'line_1_button_gray.png' is not found, scroll down and continue
     if best_confidence < 0.95:  # Adjust this threshold as needed
         print(f"'line_1_button_gray.png' not found. Confidence: {best_confidence}")
-        pyautogui.scroll(-1)  # Adjust this value as needed
+        pyautogui.scroll(-3)  # Adjust this value as needed
         time.sleep(1)  # Wait for a moment before the next check
         continue
     else:
@@ -137,3 +156,37 @@ while True:
 
 # Continue with the rest of the images
 image = 'zoombot_images\\exit_settings_button.png'
+
+# Read the template image
+template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
+template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+
+# Perform template matching at multiple scales
+scales = np.linspace(1.0, 0.2, 20)
+best_match = None
+best_scale = None
+best_confidence = -np.inf
+
+for scale in scales:
+    resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+    screenshot = np.array(pyautogui.screenshot())
+    screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
+
+    match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
+    _, confidence, _, _ = cv2.minMaxLoc(match)
+
+    if confidence > best_confidence:
+        best_confidence = confidence
+        best_match = match
+        best_scale = scale
+
+_, _, _, best_loc = cv2.minMaxLoc(best_match)
+w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
+x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
+
+# If 'exit_settings_button.png' is not found, print a message
+if best_confidence < 0.4:  # Adjust this threshold as needed
+    print(f"'exit_settings_button.png' not found. Confidence: {best_confidence}")
+else:
+    # If found, click on it
+    pyautogui.click(x, y)
