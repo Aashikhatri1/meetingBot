@@ -6,7 +6,6 @@ import cv2
 import numpy as np
 import pyautogui
 import time
-from time import sleep
 import sys
 import os
 
@@ -16,7 +15,7 @@ if len(sys.argv) > 1:
 else:
     print("No Zoom link provided. Exiting.")
     sys.exit(1)
-    
+
 # Open the browser
 # Set up Chrome options
 chrome_options = Options()
@@ -37,182 +36,88 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 # Navigate to the meeting
 driver.get(meeting_link)
 
-time.sleep(6)  # wait for the page to load
+time.sleep(7)  # wait for the page to load
 
-# This function will find the image on the screen and return its position
-def locate_on_screen(image_path, confidence=0.4):
-    if not os.path.exists(image_path):
-        print(f"The image file '{image_path}' does not exist.")
-        return None
+# List of images to find on the screen
+images = ['zoombot_images\\accept_cookies_button.png',
+          'zoombot_images\\discard_button.png',
+          'zoombot_images\\launch_meeting_button.png', 
+          'zoombot_images\\browser_button_2.png',
+          'zoombot_images\\agree_button.png', 
+          'zoombot_images\\enter_name_button.png',
+          'zoombot_images\\join_button.png',
+          'zoombot_images\\join_audio_button.png',
+          'zoombot_images\\mute_button.png', 
+          'zoombot_images\\more_options_button.png',
+          'zoombot_images\\audio_settings_button.png',
+          'zoombot_images\\test_speaker_button.png',
+          'zoombot_images\\line_1_button_gray.png', 
+          'zoombot_images\\exit_settings_button.png']
 
-    # capture the screen
-    screenshot = pyautogui.screenshot()
-    screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+# Corresponding sleep times
+sleep_times = [3, 5, 3, 3, 5, 3, 15,5,5,5,3,3,3,3,3]
 
-    # save screenshot for debugging
-    cv2.imwrite('debug_screenshot.png', screenshot)
+# Loop over each image
+for image, sleep_time in zip(images, sleep_times):
 
-    # read the image file
-    template = cv2.imread(image_path, 0)
-
-    # convert the screenshot to grayscale
-    gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
-
-    best_match_val = 0
-    best_match_loc = None
-
-    # scales for template matching
-    scales = np.linspace(0.2, 1.0, 20)[::-1]
-
-    # perform template matching at different scales
-    for scale in scales:
-        # resize the image according to the scale
-        resized_template = cv2.resize(template, None, fx=scale, fy=scale)
-
-        # if the resized image is smaller than the template, then break from the loop
-        if resized_template.shape[0] > gray_screenshot.shape[0] or resized_template.shape[1] > gray_screenshot.shape[1]:
-            break
-
-        # match the resized template with the screenshot
-        match = cv2.matchTemplate(gray_screenshot, resized_template, cv2.TM_CCOEFF_NORMED)
-        _, max_val, _, max_loc = cv2.minMaxLoc(match)
-        print(f"Scale: {scale}, Match value: {max_val}")
+    # Start a loop that continues until the image is found if the image is 'join_audio_button.png'
+    while True:
+        # Read the template image
+        template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
+        template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
         
+        # Perform template matching at multiple scales
+        scales = np.linspace(1.0, 0.2, 20)
+        best_match = None
+        best_scale = None
+        best_confidence = -np.inf
 
-        # if this max value is greater than the best match value, update best match value and best match location
-        if max_val > best_match_val:
-            best_match_val = max_val
-            best_match_loc = max_loc
+        for scale in scales:
+            resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+            screenshot = np.array(pyautogui.screenshot())
+            screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
 
-    # if the best match value is less than the confidence, return None
-    if best_match_val < confidence:
-        print(f"No match for '{image_path}' found on screen. Max match value is {best_match_val}.")
-        return None
-        
-    print(f"Image '{image_path}' found on screen with confidence {best_match_val}.")
-    return best_match_loc
+            match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
+            if image == 'zoombot_images\\line_1_button_gray.png':
+                cv2.imwrite('graySS.png', screenshot_gray)
+            _, confidence, _, _ = cv2.minMaxLoc(match)
 
-# This function will click on the given position of an image on the screen
-def click_on_image(image_path, position='center'):
-    loc = locate_on_screen(image_path)
+            if confidence > best_confidence:
+                best_confidence = confidence
+                best_match = match
+                best_scale = scale
 
-    if loc is None:
-        print(f"Unable to locate image '{image_path}' on screen.")
-        return False
+        _, _, _, best_loc = cv2.minMaxLoc(best_match)
+        w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
+        x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
 
-    if loc is not None:
-        # get the size of the image
-        img = cv2.imread(image_path)
-        h, w, _ = img.shape
+        # If the image is 'more_options_button.png', adjust the click position
+        # Clicking on top right
+        if image == 'zoombot_images\\more_options_button.png':
+            x, y = (best_loc[0] + w - 11, best_loc[1] + 10)
+        # Clicking on right centre
+        if image == 'zoombot_images\\test_speaker_button.png':
+            x, y = (best_loc[0] + w, best_loc[1] + h // 2)
+        if image == 'zoombot_images\\exit_settings_button.png':
+            x, y = (best_loc[0] + w, best_loc[1] + h // 2)
 
-        if position == 'top-right':
-            # calculate the top right corner of the image
-            # click_position = (loc[0] + w-1, loc[1])
-            click_position = (loc[0] + w - 11, loc[1] + 10)
-        elif position == 'bottom-center':
-            # calculate the bottom center of the image
-            click_position = (loc[0] + w // 2, loc[1] + h-10)
-        elif position == 'right-center':
-        # calculate the right-center of the image
-            click_position = (loc[0] + w, loc[1] + h // 2)
+        # If the confidence value does not reach the threshold
+        if (best_confidence < 0.4 and image != 'zoombot_images\\line_1_button_gray.png') or \
+           (image == 'zoombot_images\\line_1_button_gray.png' and best_confidence < 0.8):
+            print(f"{image} not found. Confidence: {best_confidence}")
+            if image == 'zoombot_images\\join_audio_button.png':
+                time.sleep(5)  # Wait for 5 seconds before searching again
+                continue
         else:
-            # calculate the center of the image
-            click_position = (loc[0] + w // 2, loc[1] + h // 2)
+            # Click on the found image
+            pyautogui.click(x, y)
+            
+            # If the image is 'enter_name_button.png', type 'Bot' after clicking
+            if image == 'zoombot_images\\enter_name_button.png':
+                time.sleep(1)  # Wait for the text input field to activate
+                pyautogui.write('Bot')  # Write 'Bot' using PyAutoGUI
 
-        # move the cursor to the click_pos of the image and click
-        pyautogui.moveTo(click_position)
-        pyautogui.click()
-        return True
-    else:
-        return False
+        break  # Break out of the while loop if the image is found, or if it's not the 'join_audio_button.png'
 
+    time.sleep(sleep_time)
 
-# The main function to join a meeting
-def join_meeting(meeting_link): 
-    time.sleep(7)
-    if not click_on_image(r'zoombot_images\accept_cookies_button.png'):
-        print("Couldn't find the accept_cookies_button")
-        return
-    
-    time.sleep(1)
-    
-    click_on_image(r'zoombot_images\keep_button.png')
-    
-    time.sleep(4)
-
-    click_on_image(r'zoombot_images\launch_meeting_button.png')
-    
-    time.sleep(5)
-
-    click_on_image(r'zoombot_images\browser_button.png')
-
-    time.sleep(5)
-
-    click_on_image(r'zoombot_images\agree_button.png')
-
-    time.sleep(5)
-    click_on_image(r'zoombot_images\enter_name_button.png')
-    
-    time.sleep(1)
-    pyautogui.write('Bot')
-    time.sleep(1)
-    click_on_image(r'zoombot_images\join_button.png')
-    time.sleep(10)
-    click_on_image(r'zoombot_images\video_button1.png')
-    
-    time.sleep(2)
-    
-    # Click on the microphone button to turn it off
-    if not click_on_image(r'zoombot_images\mute_button1.png'):
-        print("Couldn't find the mute button 1")
-        return
-        
-    # Moving the cursor in the centre of the screen
-    screen_width, screen_height = pyautogui.size()                 # Get the screen size
-    center_x, center_y = screen_width // 2, screen_height // 2     # Calculate the center of the screen
-    pyautogui.moveTo(center_x, center_y)                           # Move the mouse to the center of the screen
-
-    # Move the cursor for n seconds
-    start_time = time.time()
-
-    # Loop for 2 seconds
-    while time.time() - start_time < 2:
-        # Move the mouse cursor by 100 pixels in x and y direction
-        pyautogui.move(100, 100, duration=0.25)
-        time.sleep(0.25)  # pause a bit before next movement
-
-        # Move the mouse cursor back to initial position
-        pyautogui.move(-100, -100, duration=0.25)
-        time.sleep(0.25)  # pause a bit before next movement
-
-    # Click on the More options button
-    if not click_on_image(r'zoombot_images\more_options_button.png1', 'top-right'):
-        print("Couldn't find the more options button 1")
-        return
-    
-    time.sleep(1)
-    
-    if not click_on_image(r'zoombot_images\audio_settings_button1.png'):
-        print("Couldn't find the audio settings button 1")
-        return
-    
-    time.sleep(1)
-
-    while not click_on_image(r'zoombot_images\test_speaker_button1.png', 'right-center'):
-        # wait for a bit before trying again
-        sleep(1)
-
-    time.sleep(1)
-
-    if not click_on_image(r'zoombot_images\line_1_button1.png'):
-        print("Couldn't find the Line 1 button 1")
-        return
-    
-    time.sleep(1)
-
-    if not click_on_image(r'zoombot_images\exit_settings_button1.png','right-center'):
-        print("Couldn't find the exit settings button 1")
-        return
-    
-# Call the function with your meeting link
-join_meeting(meeting_link)
