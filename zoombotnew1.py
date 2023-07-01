@@ -119,7 +119,7 @@ for image, sleep_time in zip(images, sleep_times):
     time.sleep(sleep_time)
 
 # Find this coordinate manually by hovering over the center of the dropdown menu and printing pyautogui.position()
-dropdown_menu_center = (977, 265)  # Replace with the actual coordinates
+dropdown_menu_center = (978, 376)  # Replace with the actual coordinates
 
 # Start a loop that continues until 'line_1_button_gray.png' is found
 while True:
