@@ -150,7 +150,7 @@ while True:
     if best_confidence < 0.945:  # Adjust this threshold as needed
         print(f"'line_1_button_gray.png' not found. Confidence: {best_confidence}")
         pyautogui.moveTo(dropdown_menu_center)  # Move to the dropdown menu
-        pyautogui.scroll(-20)  # Adjust this value as needed
+        pyautogui.scroll(-25)  # Adjust this value as needed
         time.sleep(1)  # Wait for a moment before the next check
         continue
     else:
