@@ -115,7 +115,7 @@ async def main():
     recorder = Recorder(link_id)  
     await recorder.start_recording()
     asyncio.create_task(recorder.check_screen())
-    await asyncio.sleep(45)
+    await asyncio.sleep(35)
     if recorder.recording:
         await recorder.stop_recording()
 
