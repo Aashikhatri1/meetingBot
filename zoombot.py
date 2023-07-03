@@ -159,7 +159,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
             break
 def check_end_of_meeting():
     end_meeting_image = 'zoombot_images\\meeting_ended_notification.png'  # Image of the notification that the meeting has ended
-    confidence_threshold = 0.6  # Confidence threshold for template matching
+    confidence_threshold = 0.4  # Confidence threshold for template matching
     
     # Start the loop
     while True:
