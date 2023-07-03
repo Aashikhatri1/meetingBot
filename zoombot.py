@@ -1,4 +1,4 @@
-from selenium import webdriver
+g_from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
@@ -9,14 +9,19 @@ import time
 import sys
 import os
 
-def join_meeting(link, cable):
-    # Fetch the meeting link from the command line arguments
-    if len(sys.argv) > 2:
-        meeting_link = sys.argv[1]
-        audio_cable_image = sys.argv[2]
-    else:
+def join_meeting(meeting_link, cable_image):
+    if not meeting_link or not cable_image:
         print("No Zoom link provided or Cable Image Provided. Exiting.")
-        sys.exit(1)
+        return
+
+    print("Joining the meeting...")
+    # # Fetch the meeting link from the command line arguments
+    # if len(sys.argv) > 2:
+    #     meeting_link = sys.argv[1]
+    #     audio_cable_image = sys.argv[2]
+    # else:
+    #     print("No Zoom link provided or Cable Image Provided. Exiting.")
+    #     sys.exit(1)
     
     # Open the browser
     # Set up Chrome options
