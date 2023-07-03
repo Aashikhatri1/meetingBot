@@ -10,7 +10,7 @@ import sys
 import os
 
 def join_meeting(meeting_link, audio_cable_image):
-    if not meeting_link or not cable_image:
+    if not meeting_link or not audio_cable_image:
         print("No Zoom link provided or Cable Image Provided. Exiting.")
         return
 
