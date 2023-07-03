@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 import certifi
 from getCables import ServerHandler  # import ServerHandler from getCables.py
-from zoombot import check_end_of_meeting  # Import check_end_of_meeting from endmeeting.py
+from zoombot import join_meeting, end_meeting_notification  # Import join_meeting and end_meeting_notification from zoombot.py
 ca = certifi.where()
 
 # Load environment variables from .env file
@@ -49,9 +49,9 @@ def check_new_submissions():
                             if result.modified_count > 0:
                                 print('Document status updated successfully.')
                                 
-                                # Run zoombot.py with link as argument
-                                print('Running zoombot.py...')
-                                subprocess.run(['python', 'zoombot.py', link, str(available_cable)])
+                                # Run join_meeting with link as argument
+                                print('Joining the meeting...')
+                                join_meeting(link, str(available_cable))
 
                                 # Run recorder.py
                                 print('Running recorder.py...')
@@ -69,8 +69,8 @@ def check_new_submissions():
                                     else:
                                         print('Failed to insert audio path into MongoDB.')
                                     
-                                    # Call check_end_of_meeting to keep the meeting open unless it finds a notification on screen that the host has ended the meeting
-                                    check_end_of_meeting()
+                                    # Call end_meeting_notification to keep the meeting open unless it finds a notification on screen that the host has ended the meeting
+                                    end_meeting_notification()
                                 else:
                                     print('recorder.py failed.')
                             else:
