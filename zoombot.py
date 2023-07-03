@@ -56,7 +56,6 @@ def join_meeting(driver, meeting_link, audio_cable_image):
     sleep_times = [3, 5, 3, 3, 5, 3, 30,5,5,5,3,3,3,3,3]
     
     # Loop over each image
-    # Loop over each image
     for image, sleep_time in zip(images, sleep_times):
     
         # Start a loop that continues until the image is found if the image is 'join_audio_button.png'
@@ -148,7 +147,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
     
         # If 'line_1_button_gray.png' is not found, scroll down and continue
         if best_confidence < 0.945:  # Adjust this threshold as needed
-            print(f"'line_1_button_gray.png' not found. Confidence: {best_confidence}")
+            print(f"'Searching for available line button. Confidence: {best_confidence}")
             pyautogui.moveTo(dropdown_menu_center)  # Move to the dropdown menu
             pyautogui.scroll(-25)  # Adjust this value as needed
             time.sleep(1)  # Wait for a moment before the next check
