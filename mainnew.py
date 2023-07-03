@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 import certifi
 from getCables import ServerHandler  # import ServerHandler from getCables.py
-from zoombot import join_meeting, check_end_of_meeting  # Import join_meeting and end_meeting_notification from zoombot.py
+from zoombot import create_browser_instance, join_meeting, check_end_of_meeting  # Import join_meeting and end_meeting_notification from zoombot.py
 ca = certifi.where()
 
 # Load environment variables from .env file
@@ -50,8 +50,9 @@ def check_new_submissions():
                                 print('Document status updated successfully.')
                                 
                                 # Run join_meeting with link as argument
+                                driver = create_browser_instance()
                                 print('Joining the meeting...')
-                                join_meeting(link, available_cable)
+                                join_meeting(driver, link, available_cable)
                                  # Call end_meeting_notification to keep the meeting open unless it finds a notification on screen that the host has ended the meeting
                                 check_end_of_meeting()
 
