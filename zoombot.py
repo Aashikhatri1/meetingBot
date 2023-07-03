@@ -15,7 +15,7 @@ def join_meeting(link, cable):
         meeting_link = sys.argv[1]
         audio_cable_image = sys.argv[2]
     else:
-        print("No Zoom link provided or Cabel Image Provided. Exiting.")
+        print("No Zoom link provided or Cable Image Provided. Exiting.")
         sys.exit(1)
     
     # Open the browser
