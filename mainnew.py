@@ -52,6 +52,8 @@ def check_new_submissions():
                                 # Run join_meeting with link as argument
                                 print('Joining the meeting...')
                                 join_meeting(link, available_cable)
+                                 # Call end_meeting_notification to keep the meeting open unless it finds a notification on screen that the host has ended the meeting
+                                check_end_of_meeting()
 
                                 # Run recorder.py
                                 print('Running recorder.py...')
@@ -69,8 +71,7 @@ def check_new_submissions():
                                     else:
                                         print('Failed to insert audio path into MongoDB.')
                                     
-                                    # Call end_meeting_notification to keep the meeting open unless it finds a notification on screen that the host has ended the meeting
-                                    check_end_of_meeting()
+                                   
                                 else:
                                     print('recorder.py failed.')
                             else:
