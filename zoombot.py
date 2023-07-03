@@ -10,28 +10,29 @@ import sys
 import os
 
 # Fetch the meeting link from the command line arguments
-if len(sys.argv) > 1:
+if len(sys.argv) > 2:
     meeting_link = sys.argv[1]
+    audio_cable_image = sys.argv[2]
 else:
-    print("No Zoom link provided. Exiting.")
+    print("No Zoom link provided or Cabel Image Provided. Exiting.")
     sys.exit(1)
 
 # Open the browser
 # Set up Chrome options
 chrome_options = Options()
-chrome_options.add_argument("--use-fake-ui-for-media-stream")  # Disable popup for allowing webcam and microphone
+chrome_options.add_argument(
+    "--use-fake-ui-for-media-stream"
+)  # Disable popup for allowing webcam and microphone
 chrome_options.add_argument("--disable-notifications")  # Disable notifications
 chrome_options.add_argument("--start-maximized")  # Open browser in maximized mode
 
-chrome_options.add_experimental_option('prefs', {
-  "protocol_handler": {
-    "excluded_schemes": {
-      "zoommtg": False
-    }
-  }
-})
+chrome_options.add_experimental_option(
+    "prefs", {"protocol_handler": {"excluded_schemes": {"zoommtg": False}}}
+)
 
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+driver = webdriver.Chrome(
+    service=Service(ChromeDriverManager().install()), options=chrome_options
+)
 
 # Navigate to the meeting
 driver.get(meeting_link)
@@ -39,26 +40,27 @@ driver.get(meeting_link)
 time.sleep(7)  # wait for the page to load
 
 # List of images to find on the screen
-images = ['zoombot_images\\accept_cookies_button.png',
-          'zoombot_images\\discard_button.png',
-          'zoombot_images\\launch_meeting_button.png', 
-          'zoombot_images\\browser_button_2.png',
-          'zoombot_images\\agree_button.png', 
-          'zoombot_images\\enter_name_button.png',
-          'zoombot_images\\join_button.png',
-          'zoombot_images\\join_audio_button.png',
-          'zoombot_images\\mute_button.png', 
-          'zoombot_images\\more_options_button.png',
-          'zoombot_images\\audio_settings_button.png',
-          'zoombot_images\\test_speaker_button.png']
+images = [
+    "zoombot_images\\accept_cookies_button.png",
+    "zoombot_images\\discard_button.png",
+    "zoombot_images\\launch_meeting_button.png",
+    "zoombot_images\\browser_button_2.png",
+    "zoombot_images\\agree_button.png",
+    "zoombot_images\\enter_name_button.png",
+    "zoombot_images\\join_button.png",
+    "zoombot_images\\join_audio_button.png",
+    "zoombot_images\\mute_button.png",
+    "zoombot_images\\more_options_button.png",
+    "zoombot_images\\audio_settings_button.png",
+    "zoombot_images\\test_speaker_button.png",
+]
 
 # Corresponding sleep times
-sleep_times = [3, 5, 3, 3, 5, 3, 30,5,5,5,3,3,3,3,3]
+sleep_times = [3, 5, 3, 3, 5, 3, 30, 5, 5, 5, 3, 3, 3, 3, 3]
 
 # Loop over each image
 # Loop over each image
 for image, sleep_time in zip(images, sleep_times):
-
     # Start a loop that continues until the image is found if the image is 'join_audio_button.png'
     while True:
         # Read the template image
@@ -72,11 +74,15 @@ for image, sleep_time in zip(images, sleep_times):
         best_confidence = -np.inf
 
         for scale in scales:
-            resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+            resized_template = cv2.resize(
+                template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA
+            )
             screenshot = np.array(pyautogui.screenshot())
             screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
 
-            match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
+            match = cv2.matchTemplate(
+                screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED
+            )
             _, confidence, _, _ = cv2.minMaxLoc(match)
 
             if confidence > best_confidence:
@@ -89,16 +95,17 @@ for image, sleep_time in zip(images, sleep_times):
         x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
 
         # If the image is 'more_options_button.png', adjust the click position
-        if image == 'zoombot_images\\more_options_button.png':
+        if image == "zoombot_images\\more_options_button.png":
             x, y = (best_loc[0] + w - 11, best_loc[1] + 10)
-        if image == 'zoombot_images\\test_speaker_button.png':
+        if image == "zoombot_images\\test_speaker_button.png":
             x, y = (best_loc[0] + w, best_loc[1] + h // 2)
 
         # If the confidence value does not reach the threshold
-        if (best_confidence < 0.4 and image != 'zoombot_images\\line_1_button_gray.png') or \
-           (image == 'zoombot_images\\line_1_button_gray.png' and best_confidence < 0.94):
+        if (best_confidence < 0.4 and image != audio_cable_image) or (
+            image == audio_cable_image and best_confidence < 0.94
+        ):
             print(f"{image} not found. Confidence: {best_confidence}")
-            if image == 'zoombot_images\\join_audio_button.png':
+            if image == "zoombot_images\\join_audio_button.png":
                 time.sleep(5)  # Wait for 5 seconds before searching again
                 continue
         else:
@@ -106,9 +113,9 @@ for image, sleep_time in zip(images, sleep_times):
             pyautogui.click(x, y)
 
             # If the image is 'enter_name_button.png', type 'Bot' after clicking
-            if image == 'zoombot_images\\enter_name_button.png':
+            if image == "zoombot_images\\enter_name_button.png":
                 time.sleep(1)  # Wait for the text input field to activate
-                pyautogui.write('Bot')  # Write 'Bot' using PyAutoGUI
+                pyautogui.write("Bot")  # Write 'Bot' using PyAutoGUI
 
         break  # Break out of the while loop if the image is found, or if it's not the 'join_audio_button.png'
 
@@ -120,7 +127,7 @@ dropdown_menu_center = (978, 376)  # Replace with the actual coordinates
 # Start a loop that continues until 'line_1_button_gray.png' is found
 while True:
     # Read the template image
-    template = cv2.imread('zoombot_images\\line_1_button_gray.png', cv2.IMREAD_UNCHANGED)
+    template = cv2.imread(audio_cable_image, cv2.IMREAD_UNCHANGED)
     template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
 
     # Perform template matching at multiple scales
@@ -130,11 +137,15 @@ while True:
     best_confidence = -np.inf
 
     for scale in scales:
-        resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+        resized_template = cv2.resize(
+            template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA
+        )
         screenshot = np.array(pyautogui.screenshot())
         screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
 
-        match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
+        match = cv2.matchTemplate(
+            screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED
+        )
         _, confidence, _, _ = cv2.minMaxLoc(match)
 
         if confidence > best_confidence:
@@ -159,7 +170,7 @@ while True:
         break
 
 # Continue with the rest of the images
-image = 'zoombot_images\\exit_settings_button.png'
+image = "zoombot_images\\exit_settings_button.png"
 
 # Read the template image
 template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
@@ -172,7 +183,9 @@ best_scale = None
 best_confidence = -np.inf
 
 for scale in scales:
-    resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+    resized_template = cv2.resize(
+        template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA
+    )
     screenshot = np.array(pyautogui.screenshot())
     screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
 

@@ -50,7 +50,7 @@ def check_new_submissions():
                                 
                                 # Run zoombot.py with link as argument
                                 print('Running zoombot.py...')
-                                subprocess.run(['python', r'zoombot.py', link])  # replace with the path to your zoom bot file
+                                subprocess.run(['python', 'zoombot.py', link, str(available_cable)])
 
                                 # Run recorder.py
                                 print('Running recorder.py...')
