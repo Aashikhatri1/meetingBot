@@ -46,33 +46,33 @@ def check_new_submissions():
                             result = Zoom_meeting_link.update_one({'_id': doc['_id']}, {"$set": {"status": "processing"}})
 
                             # Print a success message if the update was successful
-                                if result.modified_count > 0:
-                                    print('Document status updated successfully.')
-                                    
-                                    # Run join_meeting with link as argument
-                                    print('Joining the meeting...')
-                                    join_meeting(link, available_cable)
-    
-                                    # Run recorder.py
-                                    print('Running recorder.py...')
-                                    recorder_process = subprocess.run(['python', 'recorder.py', str(doc['_id'])], capture_output=True)                                
-                                    if recorder_process.returncode == 0:
-                                        print('recorder.py finished successfully.')
-    
-                                        # Get the path of the recorded audio from the stdout of recorder.py
-                                        recorded_file_path = recorder_process.stdout.decode().strip()
-    
-                                        # Insert the path of the recorded audio into MongoDB
-                                        result = Zoom_meeting_link.update_one({'_id': doc['_id']}, {"$set": {"recordedFile": recorded_file_path}})
-                                        if result.modified_count > 0:
-                                            print(f'Inserted audio path into MongoDB: {recorded_file_path}')
-                                        else:
-                                            print('Failed to insert audio path into MongoDB.')
-                                        
-                                        # Call end_meeting_notification to keep the meeting open unless it finds a notification on screen that the host has ended the meeting
-                                        check_end_of_meeting()
+                            if result.modified_count > 0:
+                                print('Document status updated successfully.')
+                                
+                                # Run join_meeting with link as argument
+                                print('Joining the meeting...')
+                                join_meeting(link, available_cable)
+
+                                # Run recorder.py
+                                print('Running recorder.py...')
+                                recorder_process = subprocess.run(['python', 'recorder.py', str(doc['_id'])], capture_output=True)                                
+                                if recorder_process.returncode == 0:
+                                    print('recorder.py finished successfully.')
+
+                                    # Get the path of the recorded audio from the stdout of recorder.py
+                                    recorded_file_path = recorder_process.stdout.decode().strip()
+
+                                    # Insert the path of the recorded audio into MongoDB
+                                    result = Zoom_meeting_link.update_one({'_id': doc['_id']}, {"$set": {"recordedFile": recorded_file_path}})
+                                    if result.modified_count > 0:
+                                        print(f'Inserted audio path into MongoDB: {recorded_file_path}')
                                     else:
-                                        print('recorder.py failed.')
+                                        print('Failed to insert audio path into MongoDB.')
+                                    
+                                    # Call end_meeting_notification to keep the meeting open unless it finds a notification on screen that the host has ended the meeting
+                                    check_end_of_meeting()
+                                else:
+                                    print('recorder.py failed.')
                             else:
                                 print('Failed to update document status.')
                     except Exception as e:
