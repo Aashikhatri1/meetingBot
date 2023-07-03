@@ -9,27 +9,13 @@ import time
 import sys
 import os
 
-def join_meeting(meeting_link, audio_cable_image):
-    if not meeting_link or not audio_cable_image:
-        print("No Zoom link provided or Cable Image Provided. Exiting.")
-        return
 
-    print("Joining the meeting...")
-    # # Fetch the meeting link from the command line arguments
-    # if len(sys.argv) > 2:
-    #     meeting_link = sys.argv[1]
-    #     audio_cable_image = sys.argv[2]
-    # else:
-    #     print("No Zoom link provided or Cable Image Provided. Exiting.")
-    #     sys.exit(1)
-    
-    # Open the browser
+def create_browser_instance():
     # Set up Chrome options
     chrome_options = Options()
     chrome_options.add_argument("--use-fake-ui-for-media-stream")  # Disable popup for allowing webcam and microphone
     chrome_options.add_argument("--disable-notifications")  # Disable notifications
     chrome_options.add_argument("--start-maximized")  # Open browser in maximized mode
-    
     chrome_options.add_experimental_option('prefs', {
       "protocol_handler": {
         "excluded_schemes": {
@@ -37,8 +23,39 @@ def join_meeting(meeting_link, audio_cable_image):
         }
       }
     })
-    
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    return driver
+
+def join_meeting(driver, meeting_link, audio_cable_image):
+    if not meeting_link or not audio_cable_image:
+        print("No Zoom link provided or Cable Image Provided. Exiting.")
+        return
+
+    print("Joining the meeting...")
+    # # # Fetch the meeting link from the command line arguments
+    # # if len(sys.argv) > 2:
+    # #     meeting_link = sys.argv[1]
+    # #     audio_cable_image = sys.argv[2]
+    # # else:
+    # #     print("No Zoom link provided or Cable Image Provided. Exiting.")
+    # #     sys.exit(1)
+    
+    # # Open the browser
+    # # Set up Chrome options
+    # chrome_options = Options()
+    # chrome_options.add_argument("--use-fake-ui-for-media-stream")  # Disable popup for allowing webcam and microphone
+    # chrome_options.add_argument("--disable-notifications")  # Disable notifications
+    # chrome_options.add_argument("--start-maximized")  # Open browser in maximized mode
+    
+    # chrome_options.add_experimental_option('prefs', {
+    #   "protocol_handler": {
+    #     "excluded_schemes": {
+    #       "zoommtg": False
+    #     }
+    #   }
+    # })
+    
+    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     
     # Navigate to the meeting
     driver.get(meeting_link)
