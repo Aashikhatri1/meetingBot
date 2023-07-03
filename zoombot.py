@@ -9,7 +9,7 @@ import time
 import sys
 import os
 
-def join_meeting():
+def join_meeting(link, cable):
     # Fetch the meeting link from the command line arguments
     if len(sys.argv) > 2:
         meeting_link = sys.argv[1]
