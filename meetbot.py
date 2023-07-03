@@ -9,14 +9,15 @@ import time
 import sys
 import os
 
-# Fetch the meeting link from the command line arguments
-if len(sys.argv) > 2:
-    meeting_link = sys.argv[1]
-    audio_cable_image = sys.argv[2]
-else:
-    print("No Zoom link provided or Cabel Image Provided. Exiting.")
-    sys.exit(1)
+# # Fetch the meeting link from the command line arguments
+# if len(sys.argv) > 2:
+#     meeting_link = sys.argv[1]
+#     audio_cable_image = sys.argv[2]
+# else:
+#     print("No Zoom link provided or Cabel Image Provided. Exiting.")
+#     sys.exit(1)
 
+meeting_link = https://meet.google.com/deb-zcnt-cwc
 # Open the browser
 # Set up Chrome options
 chrome_options = Options()
