@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 import certifi
 from getCables import ServerHandler  # import ServerHandler from getCables.py
-from zoombot import join_meeting, end_meeting_notification  # Import join_meeting and end_meeting_notification from zoombot.py
+from zoombot import join_meeting, check_end_of_meeting  # Import join_meeting and end_meeting_notification from zoombot.py
 ca = certifi.where()
 
 # Load environment variables from .env file
@@ -70,7 +70,7 @@ def check_new_submissions():
                                         print('Failed to insert audio path into MongoDB.')
                                     
                                     # Call end_meeting_notification to keep the meeting open unless it finds a notification on screen that the host has ended the meeting
-                                    end_meeting_notification()
+                                    check_end_of_meeting()
                                 else:
                                     print('recorder.py failed.')
                             else:
