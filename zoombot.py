@@ -159,39 +159,39 @@ while True:
         pyautogui.click(x, y)
         break
 
-# Continue with the rest of the images
-image = 'zoombot_images\\exit_settings_button.png'
+# # Continue with the rest of the images
+# image = 'zoombot_images\\exit_settings_button.png'
 
-# Read the template image
-template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
-template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+# # Read the template image
+# template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
+# template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
 
-# Perform template matching at multiple scales
-scales = np.linspace(1.0, 0.2, 20)
-best_match = None
-best_scale = None
-best_confidence = -np.inf
+# # Perform template matching at multiple scales
+# scales = np.linspace(1.0, 0.2, 20)
+# best_match = None
+# best_scale = None
+# best_confidence = -np.inf
 
-for scale in scales:
-    resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
-    screenshot = np.array(pyautogui.screenshot())
-    screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
+# for scale in scales:
+#     resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+#     screenshot = np.array(pyautogui.screenshot())
+#     screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
 
-    match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
-    _, confidence, _, _ = cv2.minMaxLoc(match)
+#     match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
+#     _, confidence, _, _ = cv2.minMaxLoc(match)
 
-    if confidence > best_confidence:
-        best_confidence = confidence
-        best_match = match
-        best_scale = scale
+#     if confidence > best_confidence:
+#         best_confidence = confidence
+#         best_match = match
+#         best_scale = scale
 
-_, _, _, best_loc = cv2.minMaxLoc(best_match)
-w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
-x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
+# _, _, _, best_loc = cv2.minMaxLoc(best_match)
+# w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
+# x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
 
-# If 'exit_settings_button.png' is not found, print a message
-if best_confidence < 0.4:  # Adjust this threshold as needed
-    print(f"'exit_settings_button.png' not found. Confidence: {best_confidence}")
-else:
-    # If found, click on it
-    pyautogui.click(x, y)
+# # If 'exit_settings_button.png' is not found, print a message
+# if best_confidence < 0.4:  # Adjust this threshold as needed
+#     print(f"'exit_settings_button.png' not found. Confidence: {best_confidence}")
+# else:
+#     # If found, click on it
+#     pyautogui.click(x, y)
