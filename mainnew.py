@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 import certifi
 from getCables import ServerHandler  # import ServerHandler from getCables.py
-from endmeeting import check_end_of_meeting  # Import check_end_of_meeting from endmeeting.py
+from zoombot import check_end_of_meeting  # Import check_end_of_meeting from endmeeting.py
 ca = certifi.where()
 
 # Load environment variables from .env file
