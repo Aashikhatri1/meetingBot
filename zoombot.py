@@ -159,39 +159,41 @@ while True:
         pyautogui.click(x, y)
         break
 
-# # Continue with the rest of the images
-# image = 'zoombot_images\\exit_settings_button.png'
+end_meeting_image = 'zoombot_images\\meeting_ended_notification.png'  # Image of the notification that the meeting has ended
+confidence_threshold = 0.6  # Confidence threshold for template matching
 
-# # Read the template image
-# template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
-# template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+# Start the loop
+while True:
+    # Take a screenshot
+    screenshot = np.array(pyautogui.screenshot())
+    screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
 
-# # Perform template matching at multiple scales
-# scales = np.linspace(1.0, 0.2, 20)
-# best_match = None
-# best_scale = None
-# best_confidence = -np.inf
+    # Read the template image
+    template = cv2.imread(end_meeting_image, cv2.IMREAD_UNCHANGED)
+    template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
 
-# for scale in scales:
-#     resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
-#     screenshot = np.array(pyautogui.screenshot())
-#     screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
+    # Perform template matching at multiple scales
+    scales = np.linspace(1.0, 0.2, 20)
+    best_match = None
+    best_scale = None
+    best_confidence = -np.inf
 
-#     match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
-#     _, confidence, _, _ = cv2.minMaxLoc(match)
+    for scale in scales:
+        resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
 
-#     if confidence > best_confidence:
-#         best_confidence = confidence
-#         best_match = match
-#         best_scale = scale
+        match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
+        _, confidence, _, _ = cv2.minMaxLoc(match)
 
-# _, _, _, best_loc = cv2.minMaxLoc(best_match)
-# w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
-# x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
+        if confidence > best_confidence:
+            best_confidence = confidence
+            best_match = match
+            best_scale = scale
 
-# # If 'exit_settings_button.png' is not found, print a message
-# if best_confidence < 0.4:  # Adjust this threshold as needed
-#     print(f"'exit_settings_button.png' not found. Confidence: {best_confidence}")
-# else:
-#     # If found, click on it
-#     pyautogui.click(x, y)
+    # If the confidence value reaches the threshold, break the loop
+    if best_confidence > confidence_threshold:
+        print(f"End meeting notification found. Confidence: {best_confidence}")
+        break
+
+    # Sleep before the next check
+    time.sleep(5)
+
