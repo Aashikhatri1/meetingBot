@@ -7,6 +7,8 @@ import soundfile as sf
 import pyautogui
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from pymongo.errors import PyMongoError
+from bson.objectid import ObjectId
 import os
 import sys
 import certifi
@@ -49,8 +51,13 @@ class Recorder:
             document['busyCables'].append(self.device_name)
             self.col_cables.update_one({"_id": document["_id"]}, {"$set": {"availableCables": document['availableCables'], "busyCables": document['busyCables']}})
             # Update Meeting_link collection
-            self.col_links.update_one({"_id": self.link_id}, {"$set": {"status": "recording"}})
+          
+        try:
+            self.col_links.update_one({"_id": ObjectId(self.link_id)}, {"$set": {"status": "recording"}})
             print(f'Recording on {self.device_name}') 
+        except PyMongoError as e:
+            print(f"Error occurred while updating the start recording status: {e}")
+
 
         device_info = sd.query_devices()
         for i, device in enumerate(device_info):
@@ -79,7 +86,11 @@ class Recorder:
                 self.col_cables.update_one({"_id": document["_id"]}, {"$set": {"availableCables": document['availableCables'], "busyCables": document['busyCables']}})
 
         # Update Meeting_link collection
-        self.col_links.update_one({"_id": self.link_id}, {"$set": {"status": "Recording Completed", "recordedFile": "recording.wav"}})
+        try:
+            self.col_links.update_one({"_id": ObjectId(self.link_id)}, {"$set": {"status": "Recording Completed", "recordedFile": "recording.wav"}})
+        except PyMongoError as e:
+            print(f"Error occurred while updating the stop recording status: {e}")
+       
 
     def save_recording(self):
         sf.write('recording.wav', np.array(BUFFER), FS)
@@ -94,7 +105,7 @@ class Recorder:
             screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
             screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
             res = cv2.matchTemplate(screenshot_gray, template, cv2.TM_CCOEFF_NORMED)
-            threshold = 0.8
+            threshold = 0.6
             loc = np.where(res >= threshold)
             if len(loc[0]) > 0:
                 await self.stop_recording()
@@ -104,7 +115,7 @@ async def main():
     recorder = Recorder(link_id)  
     await recorder.start_recording()
     asyncio.create_task(recorder.check_screen())
-    await asyncio.sleep(45)
+    await asyncio.sleep(35)
     if recorder.recording:
         await recorder.stop_recording()
 
