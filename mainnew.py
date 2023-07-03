@@ -51,7 +51,7 @@ def check_new_submissions():
                                 
                                 # Run join_meeting with link as argument
                                 print('Joining the meeting...')
-                                join_meeting(link, str(available_cable))
+                                join_meeting(link, available_cable)
 
                                 # Run recorder.py
                                 print('Running recorder.py...')
