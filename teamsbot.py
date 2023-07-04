@@ -42,6 +42,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
     # List of images to find on the screen
     images = ['teamsbot_images\\browser_button.png',
               'teamsbot_images\\allow_button.png',
+              'teamsbot_images\\continue_on_browser.png',
               'teamsbot_images\\mute_button.png',
               'teamsbot_images\\enter_name_button.png',
               'teamsbot_images\\join_button.png',
