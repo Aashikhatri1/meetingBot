@@ -101,6 +101,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
                     # Move the mouse cursor back to initial position
                     pyautogui.move(-100, -100, duration=0.25)
                     time.sleep(0.25)  # pause a bit before next movement
+                 pyautogui.click(x, y)
     
             # If the confidence value does not reach the threshold
             if (best_confidence < 0.4 and image != audio_cable_image) or \
