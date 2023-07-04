@@ -29,7 +29,7 @@ def create_browser_instance():
 
 def join_meeting(driver, meeting_link, audio_cable_image):
     if not meeting_link or not audio_cable_image:
-        print("No Zoom link provided or Cable Image Provided. Exiting.")
+        print("No link provided or Cable Image Provided. Exiting.")
         return
 
     print("Joining the meeting...")
@@ -88,14 +88,14 @@ def join_meeting(driver, meeting_link, audio_cable_image):
             if image == 'teamsbot_images\\speakers_list_button.png':
                 x, y = (best_loc[0] + w, best_loc[1] + h // 2)
 
-            if image == 'teamsbot_images\\join_now_button.png':
-                pyautogui.click(x, y)
-                print("Clicked on join now button...")
-                time.sleep(15)  # Wait for a moment before the next action
+            # if image == 'teamsbot_images\\join_now_button.png':
+            #     pyautogui.click(x, y)
+            #     print("Clicked on join now button...")
+            #     time.sleep(15)  # Wait for a moment before the next action
         
-                # Press the 'esc' key
-                pyautogui.press('esc')
-                print("Escape button pressed...")
+            #     # Press the 'esc' key
+            #     pyautogui.press('esc')
+            #     print("Escape button pressed...")
                 
             # If the image is 'enter_name_button.png', type 'Bot' after clicking
             if image == 'teamsbot_images\\enter_name_button.png':
