@@ -40,21 +40,17 @@ def join_meeting(driver, meeting_link, audio_cable_image):
     time.sleep(7)  # wait for the page to load
     
     # List of images to find on the screen
-    images = ['zoombot_images\\accept_cookies_button.png',
-              # 'zoombot_images\\discard_button.png',
-              # 'zoombot_images\\launch_meeting_button.png', 
-              # 'zoombot_images\\browser_button_2.png',
-              # 'zoombot_images\\agree_button.png', 
-              # 'zoombot_images\\enter_name_button.png',
-              # 'zoombot_images\\join_button.png',
-              # 'zoombot_images\\join_audio_button.png',
-              # 'zoombot_images\\mute_button.png', 
-              # 'zoombot_images\\more_options_button.png',
-              # 'zoombot_images\\audio_settings_button.png',
-              'zoombot_images\\test_speaker_button.png']
+    images = ['teamsbot_images\\browser_button.png',
+              'teamsbot_images\\allow_button.png',
+              'teamsbot_images\\mute_button.png',
+              'teamsbot_images\\enter_name_button.png',
+              'teamsbot_images\\join_button.png',
+              'teamsbot_images\\more_options_button.png',
+              'teamsbot_images\\device_settings_button.png',
+              'teamsbot_images\\speakers_list_button.png']
     
     # Corresponding sleep times
-    sleep_times = [3, 5, 3, 3, 5, 3, 30,5,5,5,3,3,3,3,3]
+    sleep_times = [3, 3, 2, 2, 30, 3, 3,3]
     
     # Loop over each image
     for image, sleep_time in zip(images, sleep_times):
