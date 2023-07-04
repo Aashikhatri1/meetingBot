@@ -50,7 +50,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
               'teamsbot_images\\speakers_list_button.png']
     
     # Corresponding sleep times
-    sleep_times = [3, 3, 2, 2, 30, 3, 3,3]
+    sleep_times = [5, 3, 2, 2, 30, 3, 3,3]
     
     # Loop over each image
     for image, sleep_time in zip(images, sleep_times):
@@ -84,10 +84,8 @@ def join_meeting(driver, meeting_link, audio_cable_image):
             w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
             x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
     
-            # If the image is 'more_options_button.png', adjust the click position
-            if image == 'zoombot_images\\more_options_button.png':
-                x, y = (best_loc[0] + w - 11, best_loc[1] + 10)
-            if image == 'zoombot_images\\test_speaker_button.png':
+            # If the image is 'speakers_list_button', adjust the click position
+            if image == 'teamsbot_images\\speakers_list_button.png':
                 x, y = (best_loc[0] + w, best_loc[1] + h // 2)
     
             # If the confidence value does not reach the threshold
@@ -102,7 +100,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
                 pyautogui.click(x, y)
     
                 # If the image is 'enter_name_button.png', type 'Bot' after clicking
-                if image == 'zoombot_images\\enter_name_button.png':
+                if image == 'teamsbot_images\\enter_name_button.png':
                     time.sleep(1)  # Wait for the text input field to activate
                     pyautogui.write('Bot')  # Write 'Bot' using PyAutoGUI
     
