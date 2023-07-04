@@ -50,7 +50,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
               'teamsbot_images\\speakers_list_button.png']
     
     # Corresponding sleep times
-    sleep_times = [5, 3, 2, 2, 3, 3, 3,3]
+    sleep_times = [5, 3, 2, 2, 0, 3, 3,3]
     
     # Loop over each image
     for image, sleep_time in zip(images, sleep_times):
@@ -92,8 +92,8 @@ def join_meeting(driver, meeting_link, audio_cable_image):
             if image == 'teamsbot_images\\more_options_button.png':
                 start_time = time.time()
             
-                # Loop for 2 seconds
-                while time.time() - start_time < 30:
+                # Loop for n seconds
+                while time.time() - start_time < 15:
                     # Move the mouse cursor by 100 pixels in x and y direction
                     pyautogui.move(100, 100, duration=0.25)
                     time.sleep(0.25)  # pause a bit before next movement
