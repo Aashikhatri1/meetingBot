@@ -40,3 +40,6 @@ python  .\recorder.py 'Line 1 (Virtual Audio Cable)'
     'Line 31 (Virtual Audio Cable)': 'cables\\line_31.png',
     'Line 32 (Virtual Audio Cable)': 'cables\\line_32.png'
 }
+
+
+https://teams.live.com/meet/9539796991599?p=lX2iyOEQM3qAmOPD
