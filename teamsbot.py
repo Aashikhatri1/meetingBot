@@ -90,18 +90,33 @@ def join_meeting(driver, meeting_link, audio_cable_image):
 
             #Move the cursor for n seconds
             if image == 'teamsbot_images\\more_options_button.png':
+                print("Moving the cursor...")  # New print statement
                 start_time = time.time()
-            
-                # Loop for n seconds
+        
+                # Loop for 15 seconds
                 while time.time() - start_time < 15:
                     # Move the mouse cursor by 100 pixels in x and y direction
                     pyautogui.move(100, 100, duration=0.25)
                     time.sleep(0.25)  # pause a bit before next movement
-            
+        
                     # Move the mouse cursor back to initial position
                     pyautogui.move(-100, -100, duration=0.25)
                     time.sleep(0.25)  # pause a bit before next movement
-                 pyautogui.click(x, y)
+                
+                # If the image is found, click on it
+                print(f"Clicking on {image} after moving the cursor...")  # New print statement
+                pyautogui.click(x, y)
+                print(f"Clicked on {image}...")  # New print statement
+        
+            elif best_confidence < 0.4:  
+                print(f"{image} not found. Confidence: {best_confidence}")
+                # ...
+        
+            else:
+                # Click on the found image
+                print(f"Clicking on {image}...")  # New print statement
+                pyautogui.click(x, y)
+                print(f"Clicked on {image}...")  # New print statement
     
             # If the confidence value does not reach the threshold
             if (best_confidence < 0.4 and image != audio_cable_image) or \
