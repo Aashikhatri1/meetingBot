@@ -16,6 +16,7 @@ def create_browser_instance():
     chrome_options.add_argument("--use-fake-ui-for-media-stream")  # Disable popup for allowing webcam and microphone
     chrome_options.add_argument("--disable-notifications")  # Disable notifications
     chrome_options.add_argument("--start-maximized")  # Open browser in maximized mode
+    chrome_options.add_argument("--incognito")
     chrome_options.add_experimental_option('prefs', {
       "protocol_handler": {
         "excluded_schemes": {
@@ -28,7 +29,7 @@ def create_browser_instance():
 
 def join_meeting(driver, meeting_link, audio_cable_image):
     if not meeting_link or not audio_cable_image:
-        print("No Zoom link provided or Cable Image Provided. Exiting.")
+        print("No link provided or Cable Image Provided. Exiting.")
         return
 
     print("Joining the meeting...")
@@ -39,21 +40,17 @@ def join_meeting(driver, meeting_link, audio_cable_image):
     time.sleep(7)  # wait for the page to load
     
     # List of images to find on the screen
-    images = ['zoombot_images\\accept_cookies_button.png',
-              'zoombot_images\\discard_button.png',
-              'zoombot_images\\launch_meeting_button.png', 
-              'zoombot_images\\browser_button_2.png',
-              'zoombot_images\\agree_button.png', 
-              'zoombot_images\\enter_name_button.png',
-              'zoombot_images\\join_button.png',
-              'zoombot_images\\join_audio_button.png',
-              'zoombot_images\\mute_button.png', 
-              'zoombot_images\\more_options_button.png',
-              'zoombot_images\\audio_settings_button.png',
-              'zoombot_images\\test_speaker_button.png']
+    images = ['teamsbot_images\\browser_button.png',
+              'teamsbot_images\\allow_button.png',
+              'teamsbot_images\\mute_button.png',
+              'teamsbot_images\\enter_name_button.png',
+              'teamsbot_images\\join_button.png',
+              'teamsbot_images\\more_options_button.png',
+              'teamsbot_images\\device_settings_button.png',
+              'teamsbot_images\\speakers_list_button.png']
     
     # Corresponding sleep times
-    sleep_times = [3, 5, 3, 3, 5, 3, 30,5,5,5,3,3,3,3,3]
+    sleep_times = [5, 3, 2, 2, 2, 3, 3,3]
     
     # Loop over each image
     for image, sleep_time in zip(images, sleep_times):
@@ -87,30 +84,26 @@ def join_meeting(driver, meeting_link, audio_cable_image):
             w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
             x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
     
-            # If the image is 'more_options_button.png', adjust the click position
-            if image == 'zoombot_images\\more_options_button.png':
-                x, y = (best_loc[0] + w - 11, best_loc[1] + 10)
-            if image == 'zoombot_images\\test_speaker_button.png':
+            # If the image is 'speakers_list_button', adjust the click position
+            if image == 'teamsbot_images\\speakers_list_button.png':
                 x, y = (best_loc[0] + w, best_loc[1] + h // 2)
-    
-            # If the confidence value does not reach the threshold
-            if (best_confidence < 0.4 and image != audio_cable_image) or \
-               (image == audio_cable_image and best_confidence < 0.94):
-                print(f"{image} not found. Confidence: {best_confidence}")
-                if image == 'zoombot_images\\join_audio_button.png':
-                    time.sleep(5)  # Wait for 5 seconds before searching again
-                    continue
-            else:
-                # Click on the found image
-                pyautogui.click(x, y)
-    
-                # If the image is 'enter_name_button.png', type 'Bot' after clicking
-                if image == 'zoombot_images\\enter_name_button.png':
-                    time.sleep(1)  # Wait for the text input field to activate
-                    pyautogui.write('Bot')  # Write 'Bot' using PyAutoGUI
-    
-            break  # Break out of the while loop if the image is found, or if it's not the 'join_audio_button.png'
-    
+
+            # if image == 'teamsbot_images\\join_now_button.png':
+            #     pyautogui.click(x, y)
+            #     print("Clicked on join now button...")
+            #     time.sleep(15)  # Wait for a moment before the next action
+        
+            #     # Press the 'esc' key
+            #     pyautogui.press('esc')
+            #     print("Escape button pressed...")
+                
+            # If the image is 'enter_name_button.png', type 'Bot' after clicking
+            if image == 'teamsbot_images\\enter_name_button.png':
+                time.sleep(1)  # Wait for the text input field to activate
+                pyautogui.write('Bot')  # Write 'Bot' using PyAutoGUI
+
+        break  # Break out of the while loop if the image is found, or if it's not the 'join_audio_button.png'
+
         time.sleep(sleep_time)
     
     # Find this coordinate manually by hovering over the center of the dropdown menu and printing pyautogui.position()
@@ -194,4 +187,3 @@ def check_end_of_meeting():
     
         # Sleep before the next check
         time.sleep(5)
-

@@ -1,3 +1,5 @@
+meeting_link = 'https://meet.google.com/nun-sbbq-smo' 
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -6,191 +8,195 @@ import cv2
 import numpy as np
 import pyautogui
 import time
-import sys
+import subprocess
+import pygetwindow as gw
+from selenium.webdriver.common.keys import Keys
 import os
+import shutil
+from teamsbot import join_meeting, check_end_of_meeting  
 
-# Fetch the meeting link from the command line arguments
-if len(sys.argv) > 2:
-    meeting_link = sys.argv[1]
-    audio_cable_image = sys.argv[2]
-else:
-    print("No Zoom link provided or Cabel Image Provided. Exiting.")
-    sys.exit(1)
+# This function creates a new Chrome profile
+def create_new_profile_directory():
+    # Specify the base directory for the profiles
+    base_dir = r"C:\Users\LENOVO\anaconda3\chrome_profiles"
 
-# Open the browser
-# Set up Chrome options
-chrome_options = Options()
-chrome_options.add_argument("--use-fake-ui-for-media-stream")  # Disable popup for allowing webcam and microphone
-chrome_options.add_argument("--disable-notifications")  # Disable notifications
-chrome_options.add_argument("--start-maximized")  # Open browser in maximized mode
+    # Create a new directory for the new profile
+    profile_dir = os.path.join(base_dir, "profile_" + str(time.time()).replace(".", "_"))
+    os.makedirs(profile_dir, exist_ok=True)
 
-chrome_options.add_experimental_option('prefs', {
-  "protocol_handler": {
-    "excluded_schemes": {
-      "zoommtg": False
-    }
-  }
-})
+    return profile_dir
 
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+# This function will delete the profile directory
+def delete_profile_directory(profile_dir):
+    shutil.rmtree(profile_dir)
 
-# Navigate to the meeting
-driver.get(meeting_link)
+def create_browser_instance():
+    # Create a new profile
+    profile_dir = create_new_profile_directory()
 
-time.sleep(7)  # wait for the page to load
+    # Set up Chrome options
+    chrome_options = Options()
+    chrome_options.add_argument("--use-fake-ui-for-media-stream")  # Disable popup for allowing webcam and microphone
+    chrome_options.add_argument("--disable-notifications")  # Disable notifications
+    chrome_options.add_argument("--start-maximized")  # Open browser in maximized mode
+    chrome_options.add_argument(f"user-data-dir={profile_dir}")  # Use a new profile
+    chrome_options.add_experimental_option('prefs', {
+        "protocol_handler": {
+            "excluded_schemes": {
+                "zoommtg": False
+            }
+        }
+    })
 
-# List of images to find on the screen
-# images = ['zoombot_images\\accept_cookies_button.png',
-#           'zoombot_images\\discard_button.png',
-#           'zoombot_images\\launch_meeting_button.png', 
-#           'zoombot_images\\browser_button_2.png',
-#           'zoombot_images\\agree_button.png', 
-#           'zoombot_images\\enter_name_button.png',
-#           'zoombot_images\\join_button.png',
-#           'zoombot_images\\join_audio_button.png',
-#           'zoombot_images\\mute_button.png', 
-#           'zoombot_images\\more_options_button.png',
-#           'zoombot_images\\audio_settings_button.png',
-#           'zoombot_images\\test_speaker_button.png']
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-# Corresponding sleep times
-sleep_times = [3, 5, 3, 3, 5, 3, 30,5,5,5,3,3,3,3,3]
+    return driver, profile_dir
 
-# Loop over each image
-for image, sleep_time in zip(images, sleep_times):
 
-    # Start a loop that continues until the image is found if the image is 'join_audio_button.png'
-    while True:
-        # Read the template image
-        template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
-        template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+driver, profile_dir = create_browser_instance()
+print('Joining the meeting...')
+available_cable = 'Line 1 (Virtual Audio Cable)'
+join_meeting(driver, meeting_link, available_cable)
 
-        # Perform template matching at multiple scales
-        scales = np.linspace(1.0, 0.2, 20)
-        best_match = None
-        best_scale = None
-        best_confidence = -np.inf
 
-        for scale in scales:
-            resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
-            screenshot = np.array(pyautogui.screenshot())
-            screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
 
-            match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
-            _, confidence, _, _ = cv2.minMaxLoc(match)
 
-            if confidence > best_confidence:
-                best_confidence = confidence
-                best_match = match
-                best_scale = scale
 
-        _, _, _, best_loc = cv2.minMaxLoc(best_match)
-        w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
-        x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
+# # This function will start the browser
+# def start_browser():
+#     # Command to start Chrome
+#     cmd = "start chrome --remote-debugging-port=9222"
+    
+#     # Run the command in a new shell
+#     subprocess.Popen(cmd, shell=True)
 
-        # If the image is 'more_options_button.png', adjust the click position
-        if image == 'zoombot_images\\more_options_button.png':
-            x, y = (best_loc[0] + w - 11, best_loc[1] + 10)
-        if image == 'zoombot_images\\test_speaker_button.png':
-            x, y = (best_loc[0] + w, best_loc[1] + h // 2)
+#     time.sleep(5)  # wait for the browser to open
 
-        # If the confidence value does not reach the threshold
-        if (best_confidence < 0.4 and image != audio_cable_image) or \
-           (image == audio_cable_image and best_confidence < 0.94):
-            print(f"{image} not found. Confidence: {best_confidence}")
-            if image == 'zoombot_images\\join_audio_button.png':
-                time.sleep(5)  # Wait for 5 seconds before searching again
-                continue
-        else:
-            # Click on the found image
-            pyautogui.click(x, y)
+# # This function will bring the browser to front
+# def bring_browser_to_front():
+#     # Get a list of all open windows
+#     windows = gw.getAllWindows()
 
-            # If the image is 'enter_name_button.png', type 'Bot' after clicking
-            if image == 'zoombot_images\\enter_name_button.png':
-                time.sleep(1)  # Wait for the text input field to activate
-                pyautogui.write('Bot')  # Write 'Bot' using PyAutoGUI
+#     # Find the browser window and bring it to the front
+#     for window in windows:
+#         if "chrome" in window.title.lower():
+#             window.activate()
 
-        break  # Break out of the while loop if the image is found, or if it's not the 'join_audio_button.png'
+# # Call the function to start the browser
+# start_browser()
 
-    time.sleep(sleep_time)
+# # This function will find the image on the screen and return its position
+# def locate_on_screen(image_path, confidence=0.8):
+#     # capture the screen
+#     screenshot = pyautogui.screenshot()
+#     screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
 
-# Find this coordinate manually by hovering over the center of the dropdown menu and printing pyautogui.position()
-dropdown_menu_center = (978, 376)  # Replace with the actual coordinates
+#     # read the image file
+#     template = cv2.imread(image_path, 0)
+    
+#     # convert the screenshot to grayscale
+#     gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
 
-# Start a loop that continues until 'line_1_button_gray.png' is found
-while True:
-    # Read the template image
-    template = cv2.imread(audio_cable_image, cv2.IMREAD_UNCHANGED)
-    template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+#     # match the template with the screenshot
+#     match = cv2.matchTemplate(gray_screenshot, template, cv2.TM_CCOEFF_NORMED)
+#     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
 
-    # Perform template matching at multiple scales
-    scales = np.linspace(1.0, 0.2, 20)
-    best_match = None
-    best_scale = None
-    best_confidence = -np.inf
+#     # if the match is not good enough return None
+#     if max_val < confidence:
+#         return None
 
-    for scale in scales:
-        resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
-        screenshot = np.array(pyautogui.screenshot())
-        screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
+#     return max_loc
 
-        match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
-        _, confidence, _, _ = cv2.minMaxLoc(match)
+# # This function will click on the center of an image on the screen
+# def click_on_image(image_path):
+#     loc = locate_on_screen(image_path)
 
-        if confidence > best_confidence:
-            best_confidence = confidence
-            best_match = match
-            best_scale = scale
+#     if loc is not None:
+#         # get the size of the image
+#         img = cv2.imread(image_path)
+#         h, w, _ = img.shape
 
-    _, _, _, best_loc = cv2.minMaxLoc(best_match)
-    w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
-    x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
+#         # calculate the center of the image
+#         center = (loc[0] + w // 2, loc[1] + h // 2)
 
-    # If 'line_1_button_gray.png' is not found, scroll down and continue
-    if best_confidence < 0.945:  # Adjust this threshold as needed
-        print(f"'line_1_button_gray.png' not found. Confidence: {best_confidence}")
-        pyautogui.moveTo(dropdown_menu_center)  # Move to the dropdown menu
-        pyautogui.scroll(-25)  # Adjust this value as needed
-        time.sleep(1)  # Wait for a moment before the next check
-        continue
-    else:
-        # If found, click on it and break the loop
-        pyautogui.click(x, y)
-        break
+#         # move the cursor to the center of the image and click
+#         pyautogui.moveTo(center)
+#         pyautogui.click()
+#         return True
+#     else:
+#         return False
 
-# Continue with the rest of the images
-image = 'zoombot_images\\exit_settings_button.png'
+# # The main function to join a meeting
+# def join_meeting(meeting_link):
+#     # Open the browser
+#     # Set up Chrome options
+#     chrome_options = Options()
+#     chrome_options.add_argument("--use-fake-ui-for-media-stream")  # Disable popup for allowing webcam and microphone
+#     chrome_options.add_argument("--disable-notifications")  # Disable notifications
+#     chrome_options.add_argument("--start-maximized")  # Open browser in maximized mode
 
-# Read the template image
-template = cv2.imread(image, cv2.IMREAD_UNCHANGED)
-template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+#     # Add Chrome debugging option
+#     chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
 
-# Perform template matching at multiple scales
-scales = np.linspace(1.0, 0.2, 20)
-best_match = None
-best_scale = None
-best_confidence = -np.inf
+#     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-for scale in scales:
-    resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
-    screenshot = np.array(pyautogui.screenshot())
-    screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
+#     # Navigate to the meeting
+#     driver.get(meeting_link)
 
-    match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
-    _, confidence, _, _ = cv2.minMaxLoc(match)
+#     bring_browser_to_front()
 
-    if confidence > best_confidence:
-        best_confidence = confidence
-        best_match = match
-        best_scale = scale
+#     time.sleep(10)  # wait for the page to load
 
-_, _, _, best_loc = cv2.minMaxLoc(best_match)
-w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
-x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
+#     # Click on the camera button
+#     if not click_on_image(r'C:\Users\LENOVO\anaconda3\camera_button.png'):
+#         print("Couldn't find the camera button")
+#         return
+    
+#     # Click on the microphone button
+#     if not click_on_image(r'C:\Users\LENOVO\anaconda3\microphone_button.png'):
+#         print("Couldn't find the microphone button")
+#         return
 
-# If 'exit_settings_button.png' is not found, print a message
-if best_confidence < 0.4:  # Adjust this threshold as needed
-    print(f"'exit_settings_button.png' not found. Confidence: {best_confidence}")
-else:
-    # If found, click on it
-    pyautogui.click(x, y)
+#     # Click on the "Ask to join" button
+#     if not click_on_image(r'C:\Users\LENOVO\anaconda3\ask_to_join_button.png'):
+#         print("Couldn't find the 'Ask to join' button")
+#         # Now, try to click on "Join now" button
+#         if not click_on_image(r'C:\Users\LENOVO\anaconda3\join_now_button.png'):
+#             print("Couldn't find the 'Join now' button either")
+#             return
+
+#     print("Successfully joined the meeting")
+
+#     time.sleep(20)
+
+#     # Click on the "More options" button
+#     if not click_on_image(r'C:\Users\LENOVO\anaconda3\more_options_button.png'):
+#         print("Couldn't find the 'More options' button")
+#         return
+    
+#     time.sleep(2)
+    
+#     if not click_on_image(r'C:\Users\LENOVO\anaconda3\settings_button.png'):
+#         print("Couldn't find the 'Settings' button")
+#         return
+    
+#     time.sleep(3)
+    
+#     if not click_on_image(r'C:\Users\LENOVO\anaconda3\speakers_button.png'):
+#         print("Couldn't find the 'Speakers' button")
+#         return
+    
+#     time.sleep(2)
+
+#     if not click_on_image(r'C:\Users\LENOVO\anaconda3\line_1_button.png'):
+#         print("Couldn't find the 'Line 1' button")
+#         return
+    
+#     time.sleep(2)
+    
+#     if not click_on_image(r'C:\Users\LENOVO\anaconda3\exit_settings_button.png'):
+#         print("Couldn't find the 'Exit Settings' button")
+#         return
+    
+# # Call the function with your meeting link
+# join_meeting(meeting_link)

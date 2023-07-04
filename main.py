@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 import certifi
 from getCables import ServerHandler  # import ServerHandler from getCables.py
+from zoombot import create_browser_instance, join_meeting, check_end_of_meeting  # Import join_meeting and end_meeting_notification from zoombot.py
 ca = certifi.where()
 
 # Load environment variables from .env file
@@ -48,9 +49,11 @@ def check_new_submissions():
                             if result.modified_count > 0:
                                 print('Document status updated successfully.')
                                 
-                                # Run zoombot.py with link as argument
-                                print('Running zoombot.py...')
-                                subprocess.run(['python', 'zoombot.py', link, str(available_cable)])
+                                # Run join_meeting with link as argument
+                                driver = create_browser_instance()
+                                print('Joining the meeting...')
+                                join_meeting(driver, link, available_cable)
+                                 
 
                                 # Run recorder.py
                                 print('Running recorder.py...')
@@ -67,9 +70,11 @@ def check_new_submissions():
                                         print(f'Inserted audio path into MongoDB: {recorded_file_path}')
                                     else:
                                         print('Failed to insert audio path into MongoDB.')
+                                     # Call end_meeting_notification to keep the meeting open unless it finds a notification on screen that the host has ended the meeting
+                                    check_end_of_meeting()  
+                                   
                                 else:
                                     print('recorder.py failed.')
-
                             else:
                                 print('Failed to update document status.')
                     except Exception as e:
