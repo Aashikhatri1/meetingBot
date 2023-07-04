@@ -16,6 +16,7 @@ def create_browser_instance():
     chrome_options.add_argument("--use-fake-ui-for-media-stream")  # Disable popup for allowing webcam and microphone
     chrome_options.add_argument("--disable-notifications")  # Disable notifications
     chrome_options.add_argument("--start-maximized")  # Open browser in maximized mode
+    chrome_options.add_argument("--incognito")
     chrome_options.add_experimental_option('prefs', {
       "protocol_handler": {
         "excluded_schemes": {
