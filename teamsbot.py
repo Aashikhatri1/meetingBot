@@ -89,7 +89,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
                 x, y = (best_loc[0] + w, best_loc[1] + h // 2)
 
             #Move the cursor for n seconds
-            if image == 'teamsbot_images\\join_button.png':
+            if image == 'teamsbot_images\\more_options_button.png':
                 start_time = time.time()
             
                 # Loop for 2 seconds
