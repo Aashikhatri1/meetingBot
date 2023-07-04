@@ -39,21 +39,18 @@ def join_meeting(driver, meeting_link, audio_cable_image):
     time.sleep(7)  # wait for the page to load
     
     # List of images to find on the screen
-    images = ['zoombot_images\\accept_cookies_button.png',
-              'zoombot_images\\discard_button.png',
-              'zoombot_images\\launch_meeting_button.png', 
-              'zoombot_images\\browser_button_2.png',
-              'zoombot_images\\agree_button.png', 
-              'zoombot_images\\enter_name_button.png',
-              'zoombot_images\\join_button.png',
-              'zoombot_images\\join_audio_button.png',
-              'zoombot_images\\mute_button.png', 
-              'zoombot_images\\more_options_button.png',
-              'zoombot_images\\audio_settings_button.png',
-              'zoombot_images\\test_speaker_button.png']
+    images = ['teamsbot_images\\browser_button.png',
+              'teamsbot_images\\allow_button.png',
+              'teamsbot_images\\continue_on_browser.png',
+              'teamsbot_images\\mute_button.png',
+              'teamsbot_images\\enter_name_button.png',
+              'teamsbot_images\\join_button.png',
+              'teamsbot_images\\more_options_button.png',
+              'teamsbot_images\\device_settings_button.png',
+              'teamsbot_images\\speakers_list_button.png']
     
     # Corresponding sleep times
-    sleep_times = [3, 5, 3, 3, 5, 3, 30,5,5,5,3,3,3,3,3]
+    sleep_times = [5, 3, 2, 2, 2, 3, 3,3]
     
     # Loop over each image
     for image, sleep_time in zip(images, sleep_times):
@@ -87,10 +84,8 @@ def join_meeting(driver, meeting_link, audio_cable_image):
             w, h = (template.shape[1] * best_scale, template.shape[0] * best_scale)
             x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
     
-            # If the image is 'more_options_button.png', adjust the click position
-            if image == 'zoombot_images\\more_options_button.png':
-                x, y = (best_loc[0] + w - 11, best_loc[1] + 10)
-            if image == 'zoombot_images\\test_speaker_button.png':
+            # If the image is speakers_list_button , adjust the click position
+            if image == teamsbot_images\\speakers_list_button.png':
                 x, y = (best_loc[0] + w, best_loc[1] + h // 2)
     
             # If the confidence value does not reach the threshold
