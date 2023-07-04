@@ -40,7 +40,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
     
     # List of images to find on the screen
     images = ['teamsbot_images\\browser_button.png',
-              'teamsbot_images\\allow_button.png',
+              # 'teamsbot_images\\allow_button.png',
               'teamsbot_images\\mute_button.png',
               'teamsbot_images\\enter_name_button.png',
               'teamsbot_images\\join_button.png',
@@ -49,7 +49,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
               'teamsbot_images\\speakers_list_button.png']
     
     # Corresponding sleep times
-    sleep_times = [5, 5, 3, 3, 3, 3, 3,3]
+    sleep_times = [5, 5, 5, 5, 3, 3, 3,3]
     
     # Loop over each image
     for image, sleep_time in zip(images, sleep_times):
