@@ -50,7 +50,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
               'teamsbot_images\\speakers_list_button.png']
     
     # Corresponding sleep times
-    sleep_times = [5, 3, 2, 2, 30, 3, 3,3]
+    sleep_times = [5, 3, 2, 2, 3, 3, 3,3]
     
     # Loop over each image
     for image, sleep_time in zip(images, sleep_times):
@@ -87,6 +87,20 @@ def join_meeting(driver, meeting_link, audio_cable_image):
             # If the image is 'speakers_list_button', adjust the click position
             if image == 'teamsbot_images\\speakers_list_button.png':
                 x, y = (best_loc[0] + w, best_loc[1] + h // 2)
+
+            #Move the cursor for n seconds
+            if image == 'teamsbot_images\\join_button.png':
+                start_time = time.time()
+            
+                # Loop for 2 seconds
+                while time.time() - start_time < 30:
+                    # Move the mouse cursor by 100 pixels in x and y direction
+                    pyautogui.move(100, 100, duration=0.25)
+                    time.sleep(0.25)  # pause a bit before next movement
+            
+                    # Move the mouse cursor back to initial position
+                    pyautogui.move(-100, -100, duration=0.25)
+                    time.sleep(0.25)  # pause a bit before next movement
     
             # If the confidence value does not reach the threshold
             if (best_confidence < 0.4 and image != audio_cable_image) or \
