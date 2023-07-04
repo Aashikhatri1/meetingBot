@@ -85,7 +85,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
             x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
     
             # If the image is speakers_list_button , adjust the click position
-            if image == teamsbot_images\\speakers_list_button.png':
+            if image == 'teamsbot_images\\speakers_list_button.png':
                 x, y = (best_loc[0] + w, best_loc[1] + h // 2)
     
             # If the confidence value does not reach the threshold
@@ -100,7 +100,7 @@ def join_meeting(driver, meeting_link, audio_cable_image):
                 pyautogui.click(x, y)
     
                 # If the image is 'enter_name_button.png', type 'Bot' after clicking
-                if image == 'zoombot_images\\enter_name_button.png':
+                if image == 'teamsbot_images\\enter_name_button.png':
                     time.sleep(1)  # Wait for the text input field to activate
                     pyautogui.write('Bot')  # Write 'Bot' using PyAutoGUI
     
