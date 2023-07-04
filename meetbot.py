@@ -13,6 +13,7 @@ import pygetwindow as gw
 from selenium.webdriver.common.keys import Keys
 import os
 import shutil
+from teamsbot import join_meeting, check_end_of_meeting  
 
 # This function creates a new Chrome profile
 def create_new_profile_directory():
@@ -50,6 +51,14 @@ def create_browser_instance():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
     return driver, profile_dir
+
+
+driver, profile_dir = create_browser_instance()
+print('Joining the meeting...')
+available_cable = 'Line 1 (Virtual Audio Cable)'
+join_meeting(driver, meeting_link, available_cable)
+
+
 
 
 
