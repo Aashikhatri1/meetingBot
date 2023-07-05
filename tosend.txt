@@ -42,5 +42,5 @@ python  .\recorder.py 'Line 1 (Virtual Audio Cable)'
 }
 
 
-python teamsbot https://teams.live.com/meet/9539796991599?p=lX2iyOEQM3qAmOPD
+google meet : https://meet.google.com/zng-typw-fyp
 
