@@ -62,7 +62,7 @@ class ServerHandler:
                 if 'zoom' in link.lower():
                     cable_image_location = cable_image_location.replace("line", "Zoom_line")
                 elif 'google' in link.lower():
-                    cable_image_location = cable_image_location.replace("line", "Google_line")
+                    cable_image_location = cable_image_location.replace("line", "Meet_line")
                 elif 'teams' in link.lower():
                     cable_image_location = cable_image_location.replace("line", "Teams_Line")
                 return cable_image_location
