@@ -89,7 +89,8 @@ def join_meeting(driver, meeting_link, audio_cable_image):
     
             # If the image is speakers_list_button , adjust the click position
             if image == 'teamsbot_images\\speakers_list_button.png':
-                x, y = (best_loc[0] + w, best_loc[1] + h // 2)
+                x, y = (best_loc[0] + w / 2, best_loc[1] + h)
+                # x, y = (best_loc[0] + w, best_loc[1] + h // 2)
     
             # If the confidence value does not reach the threshold
             if (best_confidence < 0.4 and image != audio_cable_image) or \
