@@ -52,6 +52,11 @@ def join_meeting(driver, meeting_link, audio_cable_image):
     
     # Loop over each image
     for image, sleep_time in zip(images, sleep_times):
+
+        # Press 'esc' key before looking for more_options_button
+        if image == 'teamsbot_images\\more_options_button.png':
+            pyautogui.press('esc')
+            time.sleep(2)  # wait for the esc key effect to take place
     
         # Start a loop that continues until the image is found if the image is 'join_audio_button.png'
         while True:
