@@ -42,5 +42,5 @@ python  .\recorder.py 'Line 1 (Virtual Audio Cable)'
 }
 
 
-google meet : https://meet.google.com/zng-typw-fyp
+google meet : https://meet.google.com/enj-rifq-tgy
 
