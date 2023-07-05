@@ -52,19 +52,13 @@ cable_name_to_image_location = {
 
 class ServerHandler:
     @staticmethod
-    def get_available_cable(link):
-        """Fetches an available cable from the MongoDB collection and modifies the image path based on the link."""
+    def get_available_cable():
+        """Fetches an available cable from the MongoDB collection."""
         document = collection.find_one({"name": "Server 1"})
         if document and document.get("availableCables"):
             available_cable_name = document["availableCables"][0]
             cable_image_location = cable_name_to_image_location.get(available_cable_name)
             if cable_image_location:
-                if 'zoom' in link.lower():
-                    cable_image_location = cable_image_location.replace("line", "Zoom_line")
-                elif 'google' in link.lower():
-                    cable_image_location = cable_image_location.replace("line", "Google_line")
-                elif 'teams' in link.lower():
-                    cable_image_location = cable_image_location.replace("line", "Teams_Line")
                 return cable_image_location
         return None
     
@@ -85,4 +79,3 @@ print(ServerHandler.get_available_cable())  # get an available cable
 print(
     ServerHandler.make_cable_available("Line 18 (Virtual Audio Cable)")
 )  # move a cable from 'busy' to 'available'
-
