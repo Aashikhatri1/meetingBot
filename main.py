@@ -39,7 +39,7 @@ def check_new_submissions():
                             print(f'Link: {link}')
 
                             # Get the first available cable
-                            available_cable = ServerHandler.get_available_cable()
+                            available_cable = ServerHandler.get_available_cable(link)
                             print(f'First available cable: {available_cable}')
 
                             # Change the status of the document to 'processing'
