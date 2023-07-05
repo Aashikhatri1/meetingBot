@@ -80,9 +80,3 @@ class ServerHandler:
         )
         return result.modified_count > 0  # return whether a document was modified
 
-# Test the functions
-print(ServerHandler.get_available_cable())  # get an available cable
-print(
-    ServerHandler.make_cable_available("Line 18 (Virtual Audio Cable)")
-)  # move a cable from 'busy' to 'available'
-
