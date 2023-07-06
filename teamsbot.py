@@ -9,23 +9,6 @@ import time
 import sys
 import os
 
-
-def create_browser_instance():
-    # Set up Chrome options
-    chrome_options = Options()
-    chrome_options.add_argument("--use-fake-ui-for-media-stream")  # Disable popup for allowing webcam and microphone
-    chrome_options.add_argument("--disable-notifications")  # Disable notifications
-    chrome_options.add_argument("--start-maximized")  # Open browser in maximized mode
-    chrome_options.add_experimental_option('prefs', {
-      "protocol_handler": {
-        "excluded_schemes": {
-          "zoommtg": False
-        }
-      }
-    })
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-    return driver
-
 def join_teams_meeting(driver, meeting_link, audio_cable_image):
     if not meeting_link or not audio_cable_image:
         print("No Zoom link provided or Cable Image Provided. Exiting.")
