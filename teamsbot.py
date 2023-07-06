@@ -113,7 +113,7 @@ def join_teams_meeting(driver, meeting_link, audio_cable_image):
         time.sleep(sleep_time)
     
     #Find this coordinate manually by hovering over the center of the dropdown menu and printing pyautogui.position()
-    dropdown_menu_center = (1248, 679)  # Replace with the actual coordinates
+    dropdown_menu_center = (1239, 679)  # Replace with the actual coordinates
     
     # Start a loop that continues until 'line_1_button_gray.png' is found
     while True:
