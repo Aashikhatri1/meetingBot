@@ -6,8 +6,8 @@ import os
 import certifi
 from getCables import ServerHandler  # import ServerHandler from getCables.py
 from zoombot import create_browser_instance, join_meeting, check_end_of_meeting  # Import join_meeting and end_meeting_notification from zoombot.py
-from teamsbot import join_teams_meeting, check_teams_end_of_meeting
-#from meetbot import join_google_meeting
+from teamsbot import join_teams_meeting, check_end_of_teams_meeting
+#from meetbot import join_google_meeting, check_end_of_google_meeting
 import boto3
 ca = certifi.where()
 
