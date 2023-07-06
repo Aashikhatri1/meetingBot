@@ -26,7 +26,7 @@ def create_browser_instance():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     return driver
 
-def join_meeting(driver, meeting_link, audio_cable_image):
+def join_teams_meeting(driver, meeting_link, audio_cable_image):
     if not meeting_link or not audio_cable_image:
         print("No Zoom link provided or Cable Image Provided. Exiting.")
         return
