@@ -87,7 +87,7 @@ def check_new_submissions():
                                     if 'zoom' in link:
                                         check_end_of_meeting()  
                                     elif 'teams' in link:
-                                        check_end_of__teams_meeting()  
+                                        check_end_of_teams_meeting()  
                                     elif 'google' in link:
                                         check_end_of_google_meeting()  
                                     else:
