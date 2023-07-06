@@ -6,6 +6,7 @@ import os
 import certifi
 from getCables import ServerHandler  # import ServerHandler from getCables.py
 from zoombot import create_browser_instance, join_meeting, check_end_of_meeting  # Import join_meeting and end_meeting_notification from zoombot.py
+from teamsbot import join_teams_meeting
 ca = certifi.where()
 
 # Load environment variables from .env file
@@ -61,9 +62,15 @@ def check_new_submissions():
                                 # Run join_meeting with link as argument
                                 driver = create_browser_instance()
                                 print('Joining the meeting...')
-                                join_meeting(driver, link, available_cable)
-                                 
-
+                                if 'zoom' in link:
+                                    join_meeting(driver, link, available_cable)
+                                elif 'teams' in link:
+                                    join_teams_meeting(driver, link, available_cable)
+                                elif 'google' in link:
+                                    join_google_meeting(driver, link, available_cable)  
+                                else:
+                                    print('Unknown meeting link type.')
+                                    
                                 # Run recorder.py
                                 print('Running recorder.py...')
                                 recorder_process = subprocess.run(['python', 'recorder.py', str(doc['_id'])], capture_output=True)                                
