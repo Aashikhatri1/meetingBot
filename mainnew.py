@@ -84,8 +84,7 @@ def check_new_submissions():
 
                                     
                                     s3 = boto3.client('s3')
-                                    s3.upload_file(r'C:\Users\Administrator\Documents\GitHub\meetingBot\recording.wav', 'meetingbotrecording', 'Recording_file1.wav')
-
+                                    s3.upload_file(r'C:\Users\Administrator\Documents\GitHub\meetingBot\recording.wav', 'meetingbotrecording', 'Recording_file.wav')
 
                                     # Insert the path of the recorded audio into MongoDB
                                     result = Zoom_meeting_link.update_one({'_id': doc['_id']}, {"$set": {"recordedFile": recorded_file_path}})
