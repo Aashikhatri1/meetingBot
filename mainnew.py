@@ -7,6 +7,8 @@ import certifi
 from getCables import ServerHandler  # import ServerHandler from getCables.py
 from zoombot import create_browser_instance, join_meeting, check_end_of_meeting  # Import join_meeting and end_meeting_notification from zoombot.py
 from teamsbot import join_teams_meeting
+#from meetbot import join_google_meeting
+import boto3
 ca = certifi.where()
 
 # Load environment variables from .env file
@@ -79,6 +81,11 @@ def check_new_submissions():
 
                                     # Get the path of the recorded audio from the stdout of recorder.py
                                     recorded_file_path = recorder_process.stdout.decode().strip()
+
+                                    
+                                    s3 = boto3.client('s3')
+                                    s3.upload_file(r'C:\Users\Administrator\Documents\GitHub\meetingBot\recording.wav', 'meetingbotrecording', 'Recording_file1.wav')
+
 
                                     # Insert the path of the recorded audio into MongoDB
                                     result = Zoom_meeting_link.update_one({'_id': doc['_id']}, {"$set": {"recordedFile": recorded_file_path}})
