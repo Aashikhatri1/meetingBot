@@ -6,8 +6,8 @@ import os
 import certifi
 from getCables import ServerHandler  # import ServerHandler from getCables.py
 from zoombot import create_browser_instance, join_meeting, check_end_of_meeting  # Import join_meeting and end_meeting_notification from zoombot.py
-from teamsbot import join_teams_meeting
-#from meetbot import join_google_meeting
+from teamsbot import join_teams_meeting, check_end_of_teams_meeting
+#from meetbot import join_google_meeting, check_end_of_google_meeting
 import boto3
 ca = certifi.where()
 
@@ -40,15 +40,6 @@ def check_new_submissions():
                             print(f'New document submitted: {doc}')
                             link = doc['link']  # assuming 'link' is the field name for the meeting link
                             print(f'Link: {link}')
-
-                            # if 'zoom' in link:
-                            #     subprocess.run(['python', r'C:\Users\LENOVO\anaconda3\TECH HELPS\Zoom automation\zoombot.py', link])
-                            # elif 'teams' in link:
-                            #     subprocess.run(['python', r'C:\Users\LENOVO\anaconda3\TECH HELPS\Teams automation\teams.py', link])
-                            # elif 'google' in link:
-                            #     subprocess.run(['python', r'C:\Users\LENOVO\anaconda3\TECH HELPS\Google Meet automation\googlemeetbot.py', link])
-                            # else:
-                            #     print('Unknown meeting link type.')
 
                             # Get the first available cable
                             available_cable = ServerHandler.get_available_cable(link)
@@ -93,7 +84,14 @@ def check_new_submissions():
                                     else:
                                         print('Failed to insert audio path into MongoDB.')
                                      # Call end_meeting_notification to keep the meeting open unless it finds a notification on screen that the host has ended the meeting
-                                    check_end_of_meeting()  
+                                    if 'zoom' in link:
+                                        check_end_of_meeting()  
+                                    elif 'teams' in link:
+                                        check_end_of__teams_meeting()  
+                                    elif 'google' in link:
+                                        check_end_of_google_meeting()  
+                                    else:
+                                        print('Unknown meeting link type.') 
                                    
                                 else:
                                     print('recorder.py failed.')
