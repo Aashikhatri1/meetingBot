@@ -49,7 +49,7 @@ def check_new_submissions():
                             #     print('Unknown meeting link type.')
 
                             # Get the first available cable
-                            available_cable = ServerHandler.get_available_cable()
+                            available_cable = ServerHandler.get_available_cable(link)
                             print(f'First available cable: {available_cable}')
 
                             # Change the status of the document to 'processing'
