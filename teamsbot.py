@@ -155,8 +155,8 @@ def join_teams_meeting(driver, meeting_link, audio_cable_image):
             # If found, click on it and break the loop
             pyautogui.click(x, y)
             break
-def check_end_of_meeting():
-    end_meeting_image = 'zoombot_images\\meeting_ended_notification.png'  # Image of the notification that the meeting has ended
+def check_teams_end_of_meeting():
+    end_meeting_image = 'teamsbot_images\\meeting_ended_notification.png'  # Image of the notification that the meeting has ended
     confidence_threshold = 0.4  # Confidence threshold for template matching
     
     # Start the loop
