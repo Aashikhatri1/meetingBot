@@ -31,7 +31,7 @@ def join_teams_meeting(driver, meeting_link, audio_cable_image):
               'teamsbot_images\\speakers_list_button.png']
     
     # Corresponding sleep times
-    sleep_times = [45, 5, 5, 25, 3, 3, 3,3]
+    sleep_times = [45, 2, 2, 25, 3, 2, 3,3]
     
     # Loop over each image
     for image, sleep_time in zip(images, sleep_times):
@@ -77,7 +77,7 @@ def join_teams_meeting(driver, meeting_link, audio_cable_image):
     
             # If the confidence value does not reach the threshold
             if (best_confidence < 0.4 and image != audio_cable_image) or \
-               (image == audio_cable_image and best_confidence < 0.91):
+               (image == audio_cable_image and best_confidence < 0.86):
                 print(f"{image} not found. Confidence: {best_confidence}")
                 if image == 'zoombot_images\\join_audio_button.png':
                     time.sleep(5)  # Wait for 5 seconds before searching again
@@ -128,10 +128,10 @@ def join_teams_meeting(driver, meeting_link, audio_cable_image):
         x, y = (best_loc[0] + w / 2, best_loc[1] + h / 2)
     
         # If 'line_1_button_gray.png' is not found, scroll down and continue
-        if best_confidence < 0.91:  # Adjust this threshold as needed
+        if best_confidence < 0.86:  # Adjust this threshold as needed
             print(f"'Searching for available line button. Confidence: {best_confidence}")
             pyautogui.moveTo(dropdown_menu_center)  # Move to the dropdown menu
-            pyautogui.scroll(-75)  # Adjust this value as needed
+            pyautogui.scroll(-120)  # Adjust this value as needed
             time.sleep(1)  # Wait for a moment before the next check
             continue
         else:
