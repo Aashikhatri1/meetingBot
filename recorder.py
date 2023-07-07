@@ -80,6 +80,14 @@ class Recorder:
         sf.write('recording.wav', np.array(BUFFER), FS)
 
     async def check_screen(self):
+        # if cable_image_location:
+        #         if 'zoom' in link.lower():
+        #             cable_image_location = cable_image_location.replace("line", "Zoom_line")
+        #         elif 'google' in link.lower():
+        #             cable_image_location = cable_image_location.replace("line", "Meet_line")
+        #         elif 'teams' in link.lower():
+        #             cable_image_location = cable_image_location.replace("line", "Teams_Line")
+        #         return cable_image_location
         template = cv2.imread(TEMPLATE_PATH, cv2.IMREAD_GRAYSCALE)
         while True:
             await asyncio.sleep(CHECK_FREQUENCY)
