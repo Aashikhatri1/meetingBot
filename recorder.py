@@ -42,6 +42,8 @@ class Recorder:
     async def start_recording(self):
         print(f"Starting recording")
 
+        available_cable_name = ServerHandler.get_available_cable_name()
+
         # device_info = sd.query_devices()
         # for i, device in enumerate(device_info):
         #     if device['name'] == self.device_name:
