@@ -21,7 +21,9 @@ load_dotenv()
 FS = 44100
 BUFFER = []
 CHECK_FREQUENCY = 5  # seconds
-TEMPLATE_PATH = r'zoombot_images\meeting_ended_notification.png'
+TEMPLATE_PATH_ZOOM = r'zoombot_images\meeting_ended_notification.png'
+#TEMPLATE_PATH_MEET = r'meetbot_images\meeting_ended_notification.png'
+TEMPLATE_PATH_TEAMS = r'teamsbot_images\meeting_ended_notification.png'
 DB_CONNECTION = os.environ.get('DB_URI')
 
 class Recorder:
@@ -79,16 +81,16 @@ class Recorder:
     def save_recording(self):
         sf.write('recording.wav', np.array(BUFFER), FS)
 
-    async def check_screen(self):
-        # if cable_image_location:
-        #         if 'zoom' in link.lower():
-        #             cable_image_location = cable_image_location.replace("line", "Zoom_line")
-        #         elif 'google' in link.lower():
-        #             cable_image_location = cable_image_location.replace("line", "Meet_line")
-        #         elif 'teams' in link.lower():
-        #             cable_image_location = cable_image_location.replace("line", "Teams_Line")
-        #         return cable_image_location
-        template = cv2.imread(TEMPLATE_PATH, cv2.IMREAD_GRAYSCALE)
+    async def check_screen(self, link):
+        
+        if 'zoom' in link.lower():
+            template = cv2.imread(TEMPLATE_PATH_ZOOM, cv2.IMREAD_GRAYSCALE)
+        elif 'google' in link.lower():
+            template = cv2.imread(TEMPLATE_PATH_MEET, cv2.IMREAD_GRAYSCALE)
+        elif 'teams' in link.lower():
+            template = cv2.imread(TEMPLATE_PATH_TEAMS, cv2.IMREAD_GRAYSCALE)
+
+        # template = cv2.imread(TEMPLATE_PATH, cv2.IMREAD_GRAYSCALE)
         while True:
             await asyncio.sleep(CHECK_FREQUENCY)
             if not self.recording:
@@ -107,7 +109,7 @@ async def main():
     device_name = sys.argv[2]  # New argument for the device name
     recorder = Recorder(link_id, device_name)
     await recorder.start_recording()
-    asyncio.create_task(recorder.check_screen())
+    asyncio.create_task(recorder.check_screen(link))
     await asyncio.sleep(35)
     if recorder.recording:
         await recorder.stop_recording()
