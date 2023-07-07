@@ -131,7 +131,7 @@ def join_teams_meeting(driver, meeting_link, audio_cable_image):
         if best_confidence < 0.91:  # Adjust this threshold as needed
             print(f"'Searching for available line button. Confidence: {best_confidence}")
             pyautogui.moveTo(dropdown_menu_center)  # Move to the dropdown menu
-            pyautogui.scroll(-120)  # Adjust this value as needed
+            pyautogui.scroll(-75)  # Adjust this value as needed
             time.sleep(1)  # Wait for a moment before the next check
             continue
         else:
