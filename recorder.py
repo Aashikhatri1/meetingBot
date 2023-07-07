@@ -50,8 +50,8 @@ class Recorder:
         #         self.device_id = i
         #         break
 
-        if self.device_id is None:
-            raise ValueError(f"No device found with name: {self.device_name}")
+        # if self.device_id is None:
+        #     raise ValueError(f"No device found with name: {self.device_name}")
 
         self.stream = sd.InputStream(samplerate=FS, channels=1, device= available_cable_name, callback=self.callback)
         self.recording = True
