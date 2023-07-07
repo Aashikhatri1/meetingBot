@@ -2,6 +2,7 @@ from teamsbot import create_browser_instance, join_meeting, check_end_of_meeting
 driver = create_browser_instance()
 print('Joining the meeting...')
 link = 'https://teams.live.com/meet/9512599422983'
+#link = 'https://meet.google.com/deb-zcnt-cwc'
 available_cable = 'Line 1 (Virtual Audio Cable)'
 join_meeting(driver, link, available_cable)
 
