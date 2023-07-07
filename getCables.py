@@ -73,7 +73,7 @@ class ServerHandler:
                 elif 'teams' in link.lower():
                     cable_image_location = cable_image_location.replace("line", "Teams_Line")
                 return cable_image_location
-        return None
+        # return None
     
     @staticmethod
     def make_cable_available(cable_name):
