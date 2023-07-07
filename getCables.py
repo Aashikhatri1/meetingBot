@@ -57,13 +57,8 @@ class ServerHandler:
         document = collection.find_one({"name": "Server 1"})
         if document and document.get("availableCables"):
             available_cable_name = document["availableCables"][0]
-<<<<<<< HEAD
             return available_cable_name
             
-=======
-        return available_cable_name
-    
->>>>>>> 5b6e449a4728975f8bf0ff585ef21b9e97dd3fb5
     def get_available_cable(available_cable_name, link):
         # """Fetches an available cable from the MongoDB collection and modifies the image path based on the link."""
         # document = collection.find_one({"name": "Server 1"})
