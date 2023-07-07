@@ -42,7 +42,8 @@ class Recorder:
             BUFFER.extend(indata[:, 0])  # Assuming mono recording
 
     available_cable_name = ServerHandler.get_available_cable_name()
-            
+
+    @staticmethod
     def get_device_id_for_cable(available_cable_name):
             device_info = sd.query_devices()
             for i, device in enumerate(device_info):
