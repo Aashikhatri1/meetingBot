@@ -9,6 +9,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from pymongo.errors import PyMongoError
 from bson.objectid import ObjectId
+from getCables import ServerHandler
 import os
 import sys
 import certifi
@@ -41,16 +42,16 @@ class Recorder:
     async def start_recording(self):
         print(f"Starting recording")
 
-        device_info = sd.query_devices()
-        for i, device in enumerate(device_info):
-            if device['name'] == self.device_name:
-                self.device_id = i
-                break
+        # device_info = sd.query_devices()
+        # for i, device in enumerate(device_info):
+        #     if device['name'] == self.device_name:
+        #         self.device_id = i
+        #         break
 
         if self.device_id is None:
             raise ValueError(f"No device found with name: {self.device_name}")
 
-        self.stream = sd.InputStream(samplerate=FS, channels=1, device=self.device_id, callback=self.callback)
+        self.stream = sd.InputStream(samplerate=FS, channels=1, device= available_cable_name, callback=self.callback)
         self.recording = True
         self.stream.start()
 
