@@ -52,7 +52,7 @@ cable_name_to_image_location = {
 
 class ServerHandler:
     @staticmethod
-    def get_available_cable_name(link):
+    def get_available_cable_name():
         """Fetches an available cable from the MongoDB collection and modifies the image path based on the link."""
         document = collection.find_one({"name": "Server 1"})
         if document and document.get("availableCables"):
