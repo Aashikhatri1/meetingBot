@@ -82,7 +82,8 @@ class Recorder:
     def save_recording(self):
         sf.write('recording.wav', np.array(BUFFER), FS)
 
-    async def check_screen(self, link):
+    # async def check_screen(self, link):
+    async def check_screen(self):     
         
         # if 'zoom' in link.lower():
         #     template = cv2.imread(TEMPLATE_PATH_ZOOM, cv2.IMREAD_GRAYSCALE)
@@ -110,7 +111,8 @@ async def main():
     device_name = sys.argv[2]  # New argument for the device name
     recorder = Recorder(link_id, device_name)
     await recorder.start_recording()
-    asyncio.create_task(recorder.check_screen(link))
+    # asyncio.create_task(recorder.check_screen(link))
+    asyncio.create_task(recorder.check_screen())
     await asyncio.sleep(35)
     if recorder.recording:
         await recorder.stop_recording()
