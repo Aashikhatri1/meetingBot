@@ -53,7 +53,7 @@ class Recorder:
     async def start_recording(self):
         print(f"Starting recording")
         
-        self.device_id = get_device_id_for_cable(self.device_name)
+        self.device_id = self.get_device_id_for_cable(self.device_name)
         self.stream = sd.InputStream(samplerate=FS, channels=1, device=self.device_id, callback=self.callback)
         self.recording = True
         self.stream.start()
