@@ -21,6 +21,7 @@ load_dotenv()
 FS = 44100
 BUFFER = []
 CHECK_FREQUENCY = 5  # seconds
+TEMPLATE_PATH = r'zoombot_images\meeting_ended_notification.png'
 TEMPLATE_PATH_ZOOM = r'zoombot_images\meeting_ended_notification.png'
 #TEMPLATE_PATH_MEET = r'meetbot_images\meeting_ended_notification.png'
 TEMPLATE_PATH_TEAMS = r'teamsbot_images\meeting_ended_notification.png'
@@ -83,14 +84,14 @@ class Recorder:
 
     async def check_screen(self, link):
         
-        if 'zoom' in link.lower():
-            template = cv2.imread(TEMPLATE_PATH_ZOOM, cv2.IMREAD_GRAYSCALE)
-        elif 'google' in link.lower():
-            template = cv2.imread(TEMPLATE_PATH_MEET, cv2.IMREAD_GRAYSCALE)
-        elif 'teams' in link.lower():
-            template = cv2.imread(TEMPLATE_PATH_TEAMS, cv2.IMREAD_GRAYSCALE)
+        # if 'zoom' in link.lower():
+        #     template = cv2.imread(TEMPLATE_PATH_ZOOM, cv2.IMREAD_GRAYSCALE)
+        # elif 'google' in link.lower():
+        #     template = cv2.imread(TEMPLATE_PATH_MEET, cv2.IMREAD_GRAYSCALE)
+        # elif 'teams' in link.lower():
+        #     template = cv2.imread(TEMPLATE_PATH_TEAMS, cv2.IMREAD_GRAYSCALE)
 
-        # template = cv2.imread(TEMPLATE_PATH, cv2.IMREAD_GRAYSCALE)
+        template = cv2.imread(TEMPLATE_PATH, cv2.IMREAD_GRAYSCALE)
         while True:
             await asyncio.sleep(CHECK_FREQUENCY)
             if not self.recording:
