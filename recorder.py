@@ -41,21 +41,20 @@ class Recorder:
         if self.recording:
             BUFFER.extend(indata[:, 0])  # Assuming mono recording
 
+    available_cable_name = ServerHandler.get_available_cable_name()
+            
+    def get_device_id_for_cable(available_cable_name):
+            device_info = sd.query_devices()
+            for i, device in enumerate(device_info):
+                if device['name'] == available_cable_name:
+                    return i
+            raise ValueError(f"No device found with name: {available_cable_name}")
+
     async def start_recording(self):
         print(f"Starting recording")
-
-        available_cable_name = ServerHandler.get_available_cable_name()
-
-        # device_info = sd.query_devices()
-        # for i, device in enumerate(device_info):
-        #     if device['name'] == self.device_name:
-        #         self.device_id = i
-        #         break
-
-        # if self.device_id is None:
-        #     raise ValueError(f"No device found with name: {self.device_name}")
-
-        self.stream = sd.InputStream(samplerate=FS, channels=1, device= available_cable_name, callback=self.callback)
+        
+        self.device_id = get_device_id_for_cable(self.device_name)
+        self.stream = sd.InputStream(samplerate=FS, channels=1, device=self.device_id, callback=self.callback)
         self.recording = True
         self.stream.start()
 
