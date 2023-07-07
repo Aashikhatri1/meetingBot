@@ -52,11 +52,18 @@ cable_name_to_image_location = {
 
 class ServerHandler:
     @staticmethod
-    def get_available_cable(link):
+    def get_available_cable_name(link):
         """Fetches an available cable from the MongoDB collection and modifies the image path based on the link."""
         document = collection.find_one({"name": "Server 1"})
         if document and document.get("availableCables"):
             available_cable_name = document["availableCables"][0]
+        return available_cable_name
+    
+    def get_available_cable(available_cable_name, link):
+        # """Fetches an available cable from the MongoDB collection and modifies the image path based on the link."""
+        # document = collection.find_one({"name": "Server 1"})
+        # if document and document.get("availableCables"):
+        #     available_cable_name = document["availableCables"][0]
             cable_image_location = cable_name_to_image_location.get(available_cable_name)
             if cable_image_location:
                 if 'zoom' in link.lower():
