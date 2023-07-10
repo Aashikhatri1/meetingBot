@@ -46,7 +46,7 @@ class Recorder:
         link_doc = self.col_links.find_one({"_id": ObjectId(self.link_id)})
         return link_doc['link'] if link_doc else None
 
-    link = recorder.get_link()
+    link = get_link()
     available_cable_name = ServerHandler.get_available_cable_name()
 
     @staticmethod
