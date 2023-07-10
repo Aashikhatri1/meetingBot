@@ -88,18 +88,14 @@ class Recorder:
         sf.write('recording.wav', np.array(BUFFER), FS)
 
     # async def check_screen(self, link):
-    async def check_screen(self):   
-
+    async def check_screen(self):
         link = self.get_link()
         
         if 'zoom' in link.lower():
             template = cv2.imread(TEMPLATE_PATH_ZOOM, cv2.IMREAD_GRAYSCALE)
-        # elif 'google' in link.lower():
-        #     template = cv2.imread(TEMPLATE_PATH_MEET, cv2.IMREAD_GRAYSCALE)
         elif 'teams' in link.lower():
             template = cv2.imread(TEMPLATE_PATH_TEAMS, cv2.IMREAD_GRAYSCALE)
 
-        # template = cv2.imread(TEMPLATE_PATH, cv2.IMREAD_GRAYSCALE)
         while True:
             await asyncio.sleep(CHECK_FREQUENCY)
             if not self.recording:
@@ -110,8 +106,16 @@ class Recorder:
             res = cv2.matchTemplate(screenshot_gray, template, cv2.TM_CCOEFF_NORMED)
             threshold = 0.5
             loc = np.where(res >= threshold)
+            
+            # Log max_val for debugging
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            print(f"Max match value: {max_val}")
+            
             if len(loc[0]) > 0:
+                print("Match found, stopping recording.")
                 await self.stop_recording()
+            else:
+                print("Match not found.")
 
 async def main():
     link_id = sys.argv[1]
