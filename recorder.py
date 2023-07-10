@@ -21,10 +21,9 @@ load_dotenv()
 FS = 44100
 BUFFER = []
 CHECK_FREQUENCY = 5  # seconds
-TEMPLATE_PATH = r'zoombot_images\meeting_ended_notification.png'
-TEMPLATE_PATH_ZOOM = r'zoombot_images\meeting_ended_notification.png'
-#TEMPLATE_PATH_MEET = r'meetbot_images\meeting_ended_notification.png'
-TEMPLATE_PATH_TEAMS = r'teamsbot_images\meeting_ended_notification.png'
+template_path_zoom = r'zoombot_images\meeting_ended_notification.png'
+template_path_teams = r'teamsbot_images\meeting_ended_notification.png'
+
 DB_CONNECTION = os.environ.get('DB_URI')
 
 class Recorder:
@@ -84,7 +83,14 @@ class Recorder:
 
     # async def check_screen(self, link):
     async def check_screen(self):
-        template_path = r'teamsbot_images\meeting_ended_notification.png'
+
+        link = self.get_link()
+        
+        if 'zoom' in link.lower():
+            template_path = template_path_zoom
+        elif 'teams' in link.lower():
+            template_path = template_path_teams
+        
         template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
         scales = np.linspace(1.0, 0.2, 20)
         threshold = 0.5  # Confidence threshold for template matching
