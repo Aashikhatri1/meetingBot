@@ -93,10 +93,10 @@ class Recorder:
         
         if 'zoom' in link.lower():
             template = cv2.imread(TEMPLATE_PATH_ZOOM, cv2.IMREAD_GRAYSCALE)
-            cv2.imwrite('end_ss.png', 'end_ss.png')
+            cv2.imwrite('end_ss.png', template)
         elif 'teams' in link.lower():
             template = cv2.imread(TEMPLATE_PATH_TEAMS, cv2.IMREAD_GRAYSCALE)
-            cv2.imwrite('end_ss.png', 'end_ss.png')
+            cv2.imwrite('end_ss.png', template)
 
         while True:
             await asyncio.sleep(CHECK_FREQUENCY)
