@@ -35,6 +35,7 @@ class Recorder:
         self.client = MongoClient(DB_CONNECTION, tlsCAFile=ca)
         self.db = self.client["Meeting_automation"]
         self.col_links = self.db["Zoom_meeting_link"]
+        self.meeting_ended = False  # This attribute will track if the meeting has ended
 
     def callback(self, indata, frames, time, status):
         if self.recording:
@@ -65,6 +66,8 @@ class Recorder:
             print(f"Error occurred while updating the start recording status: {e}")
 
     async def stop_recording(self):
+        if not self.meeting_ended:  # If the meeting hasn't ended, don't stop recording
+            return
         print("Stopping recording")
         self.stream.stop()
         self.recording = False
@@ -113,14 +116,15 @@ class Recorder:
 
             if best_confidence > threshold:
                 print(f"End meeting notification found. Confidence: {best_confidence}")
+                self.meeting_ended = True  # Here, we set self.meeting_ended to True because the meeting has ended
                 await self.stop_recording()
-                break
 
     async def wait_timeout(self, timeout):
         await asyncio.sleep(timeout)
         if self.recording:
+            self.meeting_ended = True  # Here, we set self.meeting_ended to True because the time limit has been reached
             await self.stop_recording()
-
+            
 async def main():
     link_id = sys.argv[1]
     device_name = sys.argv[2]  # New argument for the device name
