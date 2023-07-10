@@ -88,71 +88,72 @@ class Recorder:
         sf.write('recording.wav', np.array(BUFFER), FS)
 
     # async def check_screen(self, link):
-    async def check_screen(self):
-        link = self.get_link()
+    # async def check_screen(self):
+    #     link = self.get_link()
         
-        if 'zoom' in link.lower():
-            template = cv2.imread(TEMPLATE_PATH_ZOOM, cv2.IMREAD_GRAYSCALE)
-        elif 'teams' in link.lower():
-            template = cv2.imread(TEMPLATE_PATH_TEAMS, cv2.IMREAD_GRAYSCALE)
+    #     if 'zoom' in link.lower():
+    #         template = cv2.imread(TEMPLATE_PATH_ZOOM, cv2.IMREAD_GRAYSCALE)
+    #     elif 'teams' in link.lower():
+    #         template = cv2.imread(TEMPLATE_PATH_TEAMS, cv2.IMREAD_GRAYSCALE)
 
-        while True:
-            await asyncio.sleep(CHECK_FREQUENCY)
-            if not self.recording:
-                return
-            screenshot = pyautogui.screenshot()
-            screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-            screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
-            res = cv2.matchTemplate(screenshot_gray, template, cv2.TM_CCOEFF_NORMED)
-            cv2.imwrite('end_ss.png', screenshot_gray)
-            threshold = 0.5
-            loc = np.where(res >= threshold)
+    #     while True:
+    #         await asyncio.sleep(CHECK_FREQUENCY)
+    #         if not self.recording:
+    #             return
+    #         screenshot = pyautogui.screenshot()
+    #         screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+    #         screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
+    #         res = cv2.matchTemplate(screenshot_gray, template, cv2.TM_CCOEFF_NORMED)
+    #         cv2.imwrite('end_ss.png', screenshot_gray)
+    #         threshold = 0.5
+    #         loc = np.where(res >= threshold)
             
-            # Log max_val for debugging
-            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-            print(f"Max match value: {max_val}")
+    #         # Log max_val for debugging
+    #         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    #         print(f"Max match value: {max_val}")
             
-            if len(loc[0]) > 0:
-                print("Match found, stopping recording.")
-                await self.stop_recording()
-            else:
-                print("Match not found.")
+    #         if len(loc[0]) > 0:
+    #             print("Match found, stopping recording.")
+    #             await self.stop_recording()
+    #         else:
+    #             print("Match not found.")
 
     def check_end_of_teams_meeting():
-    end_meeting_image = 'teamsbot_images\\meeting_ended_notification.png'  # Image of the notification that the meeting has ended
-    confidence_threshold = 0.4  # Confidence threshold for template matching
-    
-    # Start the loop
-    while True:
-        # Take a screenshot
-        screenshot = np.array(pyautogui.screenshot())
-        screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
-    
-        # Read the template image
-        template = cv2.imread(end_meeting_image, cv2.IMREAD_UNCHANGED)
-        template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
-    
-        # Perform template matching at multiple scales
-        scales = np.linspace(1.0, 0.2, 20)
-        best_match = None
-        best_scale = None
-        best_confidence = -np.inf
-    
-        for scale in scales:
-            resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
-    
-            match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
-            _, confidence, _, _ = cv2.minMaxLoc(match)
-    
-            if confidence > best_confidence:
-                best_confidence = confidence
-                best_match = match
-                best_scale = scale
-    
-        # If the confidence value reaches the threshold, break the loop
-        if best_confidence > confidence_threshold:
-            print(f"End meeting notification found. Confidence: {best_confidence}")
-            break
+        end_meeting_image = 'teamsbot_images\\meeting_ended_notification.png'  # Image of the notification that the meeting has ended
+        confidence_threshold = 0.4  # Confidence threshold for template matching
+        
+        # Start the loop
+        while True:
+            # Take a screenshot
+            screenshot = np.array(pyautogui.screenshot())
+            screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
+        
+            # Read the template image
+            template = cv2.imread(end_meeting_image, cv2.IMREAD_UNCHANGED)
+            template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+        
+            # Perform template matching at multiple scales
+            scales = np.linspace(1.0, 0.2, 20)
+            best_match = None
+            best_scale = None
+            best_confidence = -np.inf
+        
+            for scale in scales:
+                resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+        
+                match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
+                _, confidence, _, _ = cv2.minMaxLoc(match)
+        
+                if confidence > best_confidence:
+                    best_confidence = confidence
+                    best_match = match
+                    best_scale = scale
+        
+            # If the confidence value reaches the threshold, break the loop
+            if best_confidence > confidence_threshold:
+                print(f"End meeting notification found. Confidence: {best_confidence}")
+                await self.stop_recording()
+                break
 
 async def main():
     link_id = sys.argv[1]
@@ -160,7 +161,8 @@ async def main():
     recorder = Recorder(link_id, device_name)
     await recorder.start_recording()
     # asyncio.create_task(recorder.check_screen(link))
-    asyncio.create_task(recorder.check_screen())
+    # asyncio.create_task(recorder.check_screen())
+    asyncio.create_task(recorder.check_end_of_teams_meeting())
     await asyncio.sleep(35)
     if recorder.recording:
         await recorder.stop_recording()
