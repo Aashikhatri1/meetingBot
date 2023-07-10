@@ -118,6 +118,42 @@ class Recorder:
             else:
                 print("Match not found.")
 
+    def check_end_of_teams_meeting():
+    end_meeting_image = 'teamsbot_images\\meeting_ended_notification.png'  # Image of the notification that the meeting has ended
+    confidence_threshold = 0.4  # Confidence threshold for template matching
+    
+    # Start the loop
+    while True:
+        # Take a screenshot
+        screenshot = np.array(pyautogui.screenshot())
+        screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
+    
+        # Read the template image
+        template = cv2.imread(end_meeting_image, cv2.IMREAD_UNCHANGED)
+        template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+    
+        # Perform template matching at multiple scales
+        scales = np.linspace(1.0, 0.2, 20)
+        best_match = None
+        best_scale = None
+        best_confidence = -np.inf
+    
+        for scale in scales:
+            resized_template = cv2.resize(template_gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+    
+            match = cv2.matchTemplate(screenshot_gray, resized_template, cv2.TM_CCOEFF_NORMED)
+            _, confidence, _, _ = cv2.minMaxLoc(match)
+    
+            if confidence > best_confidence:
+                best_confidence = confidence
+                best_match = match
+                best_scale = scale
+    
+        # If the confidence value reaches the threshold, break the loop
+        if best_confidence > confidence_threshold:
+            print(f"End meeting notification found. Confidence: {best_confidence}")
+            break
+
 async def main():
     link_id = sys.argv[1]
     device_name = sys.argv[2]  # New argument for the device name
