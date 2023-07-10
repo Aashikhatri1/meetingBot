@@ -93,10 +93,8 @@ class Recorder:
         
         if 'zoom' in link.lower():
             template = cv2.imread(TEMPLATE_PATH_ZOOM, cv2.IMREAD_GRAYSCALE)
-            cv2.imwrite('end_ss.png', template)
         elif 'teams' in link.lower():
             template = cv2.imread(TEMPLATE_PATH_TEAMS, cv2.IMREAD_GRAYSCALE)
-            cv2.imwrite('end_ss.png', template)
 
         while True:
             await asyncio.sleep(CHECK_FREQUENCY)
@@ -106,6 +104,7 @@ class Recorder:
             screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
             screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
             res = cv2.matchTemplate(screenshot_gray, template, cv2.TM_CCOEFF_NORMED)
+            cv2.imwrite('end_ss.png', screenshot_gray)
             threshold = 0.5
             loc = np.where(res >= threshold)
             
