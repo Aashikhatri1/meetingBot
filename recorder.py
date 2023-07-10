@@ -108,7 +108,7 @@ class Recorder:
             screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
             screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
             res = cv2.matchTemplate(screenshot_gray, template, cv2.TM_CCOEFF_NORMED)
-            threshold = 0.6
+            threshold = 0.5
             loc = np.where(res >= threshold)
             if len(loc[0]) > 0:
                 await self.stop_recording()
