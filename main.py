@@ -56,16 +56,16 @@ def check_new_submissions():
                                 print('Document status updated successfully.')
                                 
                                 # Run join_meeting with link as argument
-                                # driver = create_browser_instance()
-                                # print('Joining the meeting...')
-                                # if 'zoom' in link:
-                                #     join_meeting(driver, link, available_cable)
-                                # elif 'teams' in link:
-                                #     join_teams_meeting(driver, link, available_cable)
-                                # elif 'google' in link:
-                                #     join_google_meeting(driver, link, available_cable)  
-                                # else:
-                                #     print('Unknown meeting link type.')
+                                driver = create_browser_instance()
+                                print('Joining the meeting...')
+                                if 'zoom' in link:
+                                    join_meeting(driver, link, available_cable)
+                                elif 'teams' in link:
+                                    join_teams_meeting(driver, link, available_cable)
+                                elif 'google' in link:
+                                    join_google_meeting(driver, link, available_cable)  
+                                else:
+                                    print('Unknown meeting link type.')
                                     
                                 # Run recorder.py
                                 print('Running recorder.py...')
@@ -81,8 +81,8 @@ def check_new_submissions():
                                     recorded_file_path = 'https://meetingbotrecording.s3.amazonaws.com/' +  str(doc['_id']) + '.wav'
 
                                     
-                                    # s3 = boto3.client('s3')
-                                    # s3.upload_file(r'C:\Users\Administrator\Documents\GitHub\meetingBot\recording.wav', 'meetingbotrecording', str(doc['_id']) + '.wav')
+                                    s3 = boto3.client('s3')
+                                    s3.upload_file(r'C:\Users\Administrator\Documents\GitHub\meetingBot\recording.wav', 'meetingbotrecording', str(doc['_id']) + '.wav')
 
                                     # Insert the path of the recorded audio into MongoDB
                                     result = Zoom_meeting_link.update_one({'_id': doc['_id']}, {"$set": {"recordedFile": recorded_file_path}})
