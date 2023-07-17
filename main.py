@@ -77,12 +77,13 @@ def check_new_submissions():
                                     print('recorder.py finished successfully.')
 
                                     # Get the path of the recorded audio from the stdout of recorder.py
-                                    # recorded_file_path = recorder_process.stdout.decode().strip()
-                                    recorded_file_path = 'https://meetingbotrecording.s3.amazonaws.com/' +  str(doc['_id']) + '.wav'
+                                    
+                                    filenames3 = 'MeetingBot_' + str(doc['_id']) + '.wav'
+                                    recorded_file_path = 'https://meetingbotrecording.s3.amazonaws.com/' +  filenames3
 
                                     
                                     s3 = boto3.client('s3')
-                                    filenames3 = 'MeetingBot_' + str(doc['_id']) + '.wav'
+                                    
                                     s3.upload_file(r'C:\Users\Administrator\Documents\GitHub\meetingBot\recording.wav', 'meetingbotrecording', filenames3 )
 
                                     # Insert the path of the recorded audio into MongoDB
