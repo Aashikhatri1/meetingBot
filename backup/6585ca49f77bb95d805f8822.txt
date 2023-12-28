@@ -1,0 +1,1 @@
+{'result': {'6585ca49f77bb95d805f8822.wav': "SPEAKER 0 00:00:04.18\nhello this is jenny from ga i'm calling you regarding put someone's phone would do you like to purchase it it has great camera and amazing battery do you also like to visit a showroom yes i would like to visit your showroom tomorrow okay that will be great see you soon"}}

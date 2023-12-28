@@ -1,0 +1,29 @@
+https://us04web.zoom.us/j/2349397688?pwd=SWRGSElROXlwc2xQdG93REFDdm1iUT09
+
+
+
+clicked on zoombot_images\mute_button.png
+Running recorder.py...
+recorder.py finished successfully.
+response {"task_id":"65860372f77bb95d805f8e46"}
+
+diarisation {'result': '{\n    "65860372f77bb95d805f8e46.wav": "SPEAKER 0 00:00:02.51\\nhello this is jenny from gadget hub i\'ve called to tell you about google pixel an
+d interested in purchasing a new phone yes i want to purchase a new phone can you tell me more about it sure google pixels offers variety of features it has amazing camer
+a and long battery life long would you like to visit a store yes sure"\n}'}
+upload_diarisation {'result': {'pid': '65860372f77bb95d805f8e46', 'record': '{"id":"65860372f77bb95d805f8e46","type":"meeting","data":{"result":"{\\n    \\"65860372f77bb9
+5d805f8e46.wav\\": \\"SPEAKER 0 00:00:02.51\\\\nhello this is jenny from gadget hub i\'ve called to tell you about google pixel and interested in purchasing a new phone y
+es i want to purchase a new phone can you tell me more about it sure google pixels offers variety of features it has amazing camera and long battery life long would you l
+ike to visit a store yes sure\\"\\n}"}}', 'type': 'meeting', '_id': '65860701c4f97f3457006cd8', 'createdAt': '2023-12-22T22:00:33.874Z', 'updatedAt': '2023-12-22T22:00:33
+.874Z', '__v': 0}}
+File not found: 65860372f77bb95d805f8e46.txt
+indicators {'result': [{'_id': '655e0591aa8a5ee2b48810cc', 'type': 'Opening', 'category': 'Greeting', 'value': 'hi', 'alternative': 'testing', 'comparisionType': 'testing
+', 'timeRestriction': 'testing', 'speaker': 'tester', 'createdAt': '2023-11-22T13:43:45.545Z', 'updatedAt': '2023-11-22T13:44:24.846Z'}], 'totalRecords': 1}
+An error occurred while processing document: cannot access local variable 'diarisation_str' where it is not associated with a value
+Current count: 36
+Current count: 36
+Current count: 36
+Current count: 36
+Current count: 36
+Current count: 36
+Current count: 36
+Current count: 36

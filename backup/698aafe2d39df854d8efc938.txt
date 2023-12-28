@@ -1,0 +1,1 @@
+{'698aafe2d39df854d8efc938.wav': "SPEAKER 0 00:00:00.12\nhigh is this martial arts academy \nSPEAKER 1 00:00:02.84\nyes how may i assist you today \nSPEAKER 0 00:00:05.48\ncan you tell me about today's timing for boxing classes \nSPEAKER 1 00:00:08.85\nsure it's at 7pm great thanks have a great day"}
