@@ -7,11 +7,9 @@ import os
 import certifi
 from bson import ObjectId
 
-from getCables import ServerHandler  # import ServerHandler from getCables.py
-from zoombot import create_browser_instance, join_meeting, check_end_of_meeting  # Import join_meeting and end_meeting_notification from zoombot.py
-#from teamsbot import join_teams_meeting, check_end_of_teams_meeting
-#from meetbot import join_google_meeting, check_end_of_google_meeting
-from meet2 import join_google_meeting #, check_end_of_google_meeting
+from getCables import ServerHandler  
+from zoombot import create_browser_instance, join_meeting, check_end_of_meeting  
+from meetbot import join_google_meeting 
 import boto3
 ca = certifi.where()
 from API_requests import send_post_request, get_diarisation_result, get_all_indicator_list, create_indicator_diarisation, save_diarisation_to_file, upload_file_to_s3
